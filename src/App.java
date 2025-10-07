@@ -35,7 +35,6 @@ public class App {
                     System.out.println("You currently have " + Currency.getMoney() + " dollars available.");
                     if (scanner.hasNextInt()) {
                         selectedGame = scanner.nextInt();
-                        scanner.nextLine(); // Consume the newline character
                         if (selectedGame >= 1 && selectedGame <= 3) {
                             break; // Breaks if it is a valid input
                         } else {
