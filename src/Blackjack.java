@@ -205,29 +205,29 @@ public class Blackjack {
                     case "p" -> { // Split
                         ArrayList<Card> hand = playerHand.get(i);    
                         if (hand.size() == 2 && hand.get(0).getValue().equals(hand.get(1).getValue())) { // Only allow split if the player has a pair
-                            // Create new hand for the second card
-                            ArrayList<Card> newHand = new ArrayList<>();
-                            newHand.add(hand.remove(1)); // move second card to new hand        
-                            hand.add(shoe.deal()); // Deal one new card to each hand
-                            newHand.add(shoe.deal());
-                            playerHand.add(newHand); // Add the new hand to playerHand
-                            // Add new entries for bust and blackjack, ensuring both hands are correctly initialized
-                            playerBust.add(false); // New hand is not busted
-                            playerBlackjack.add(false); // New hand does not start with blackjack
-                            if (calculateHandValue(hand) == 21 && hand.size() == 2) { // Make sure the original hand remains correctly marked
-                                playerBlackjack.set(i, true);
+                            if (bet.get(i) <= Currency.getMoney()) {
+                                Currency.setMoney(Currency.getMoney() - bet.get(i));
+                                // Create new hand for the second card
+                                ArrayList<Card> newHand = new ArrayList<>();
+                                newHand.add(hand.remove(1)); // move second card to new hand        
+                                hand.add(shoe.deal()); // Deal one new card to each hand
+                                newHand.add(shoe.deal());
+                                playerHand.add(newHand); // Add the new hand to playerHand
+                                // Add new entries for bust and blackjack, ensuring both hands are correctly initialized
+                                playerBust.add(false); // New hand is not busted
+                                playerBlackjack.add(false); // New hand does not start with blackjack
+                                playerBlackjack.set(i, false); // Original hand cannot have blackjack after split
+                                playerBust.set(i, false); // original hand cannot be busted immediately after split
+                                bet.add(bet.get(i)); // Duplicate bet for the new hand
+                                System.out.println("You have split. You now have " + playerHand.size() + " hands.");
+                                System.out.println("Hand " + (i + 1) + " is now: " + hand);
+                                System.out.println("New hand " + playerHand.size() + " is: " + newHand);
                             } else {
-                                playerBlackjack.set(i, false);
+                                System.out.println("Not enough money to split.");
                             }
-                            playerBust.set(i, false); // original hand cannot be busted immediately after split
-                            bet.add(bet.get(i)); // Duplicate bet for the new hand
-                            System.out.println("You have split. You now have " + playerHand.size() + " hands.");
                         } else {
                             System.out.println("You can only split pairs of equal value.");
-                        }
-                        if (bet.size() != playerHand.size()) { // Debugging catch for desync bet and hands
-                            System.out.println("WARNING: Bets and hands desynced! Hands=" + playerHand.size() + " Bets=" + bet.size());
-                        }
+                        } // Refuse split if not possible, then returns back to the switch to allow user to pick another action
                     }
                 }
             }
