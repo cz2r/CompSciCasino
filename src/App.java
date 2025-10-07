@@ -23,7 +23,7 @@ public class App {
             while (true) {
                 System.out.println("What is your name?");
                 if (scanner.hasNextLine()) {
-                    Currency.setName(scanner.nextLine());
+                    Currency.setName(scanner.nextLine().trim());
                     System.out.println("Your name has been inputted as: " + Currency.getName());
                     break;
                 }

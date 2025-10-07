@@ -283,7 +283,7 @@ public class Blackjack {
                 }
             } else if (playerBust.get(i)) {
                 System.out.println("Bust! You lose $" + handBet); // Money lost
-            } else if (playerBlackjack.get(i) && dealerTotal != 21) { // If the player got a Blackjack
+            } else if (playerBlackjack.get(i)) { // If the player got a Blackjack
                 int payout = (int) (handBet * 1.5); // Calculates the payout (Money was removed at the start, so payout needs to be calc'd seperately)
                 Currency.setMoney(Currency.getMoney() + handBet + payout); // Money gained
                 System.out.println("Blackjack! You win $" + payout); 
@@ -295,8 +295,6 @@ public class Blackjack {
                 System.out.println("You stood higher than the dealer! You win $" + handBet);
             } else if (playerTotal < dealerTotal) { // If the player stood with a lower score than the dealer
                 System.out.println("You stood lower than the dealer! You lose $" + handBet);
-            } else if (bet.get(i) == 0) { // If the player did not bet on that hand
-                System.out.println("No bet placed, no money won or lost.");
             } else {
                 Currency.setMoney(Currency.getMoney() + handBet);
                 System.out.println("Push. Your bet is returned."); // If the dealer and player have the same amount
