@@ -295,6 +295,8 @@ public class Blackjack {
                 System.out.println("You stood higher than the dealer! You win $" + handBet);
             } else if (playerTotal < dealerTotal) { // If the player stood with a lower score than the dealer
                 System.out.println("You stood lower than the dealer! You lose $" + handBet);
+            } else if (bet.get(i) == 0) { // If the player did not bet on that hand
+                System.out.println("No bet placed, no money won or lost.");
             } else {
                 Currency.setMoney(Currency.getMoney() + handBet);
                 System.out.println("Push. Your bet is returned."); // If the dealer and player have the same amount
