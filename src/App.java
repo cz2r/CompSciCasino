@@ -72,7 +72,6 @@ public class App {
                             greetedSlots = true;
                         }
                         // Insert your method here
-                        System.out.println("Would you like to play again? Please enter 1 for yes and 2 for no");
                     }
                     case 3 -> {
                         if (!greetedRoulette){
