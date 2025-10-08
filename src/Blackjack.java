@@ -66,7 +66,7 @@ public class Blackjack {
                     System.out.println("Invalid input! Please enter a positive integer.");
                     scanner.next(); // Ensure that it doesn't get stuck on invalid input
                 }
-            } while (true); // Catches negative currency values - doesnt let the user add a bet
+            } while (true);
         }
 
         System.out.println("Your final bets are: ");
