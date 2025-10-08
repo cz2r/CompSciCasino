@@ -72,6 +72,7 @@ public class Blackjack {
         System.out.println("Your final bets are: ");
         for (int i = 0; i < hands; i++){
             System.out.println(bet.get(i) + " for hand " + (i+1)); // Prints every hand and the bets placed on them
+            pause(500); // Small pause for readability
         }
 
         if (!isShuffled){
@@ -107,11 +108,13 @@ public class Blackjack {
             int handValue = calculateHandValue(playerHand.get(i)); // Calculates the value of the players hand
             System.out.println("Player hand " + (i + 1) + ": " + playerHand.get(i));
             System.out.println(" -> Total: " + handValue); // Prints all the hands that the player has and their respective value
+            pause(500); // Small pause for readability
         }
 
         System.out.println("Dealer shows a " + dealerHand.get(0)); // Shows the dealers top card
-        System.out.println("Cards in shoe: " + (shoe.getCardsInDeck() - shoe.getTopCard()) + " / " + shoe.getCardsInDeck());
+        pause(500); // Small pause for readability
         System.out.println("Dealer peeks at their other card...");
+        pause(500);
 
         int dealerValue = calculateHandValue(dealerHand); // Check if dealer has a natural blackjack
         boolean dealerHasBlackjack = dealerValue == 21 && dealerHand.size() == 2; // If both values are true then it sets as true
@@ -121,6 +124,7 @@ public class Blackjack {
             return; // Skip the rest - cant play anything else
         } else {
             System.out.println("Dealer does not have a blackjack! Round continues...");
+            System.out.println("Cards in shoe: " + (shoe.getCardsInDeck() - shoe.getTopCard()) + " / " + shoe.getCardsInDeck());
         }
 
         playHands();
@@ -129,6 +133,14 @@ public class Blackjack {
     }
 
     // Methods
+
+    private static void pause(int i) {
+        try {
+            Thread.sleep(i); // Pauses the program for i milliseconds
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore interrupted status
+        }
+    }
 
     private static int calculateHandValue(ArrayList<Card> hand) { // Calculate the value of the hand (with account to aces and ace logic)
         int total = 0; // Total of each hand
@@ -238,9 +250,11 @@ public class Blackjack {
 
     private static void dealerTurn() {
         System.out.println("\n\n\n\nDealer is now playing...");
+        pause(500);
 
         System.out.println("Dealer's hand: " + dealerHand);
         System.out.println(" -> Total: " + calculateHandValue(dealerHand));
+        pause(500);
 
         while (true) { // Infinite loop until dealer busts or stands
             int dealerValue = calculateHandValue(dealerHand);
@@ -248,9 +262,10 @@ public class Blackjack {
             Card newCard = shoe.deal(); // Hits if the dealer value is not 17 or higher
             dealerHand.add(newCard); // Adds the new card
             System.out.println("Dealer hits: " + newCard); // Displays the card the dealer pulls
-
+            pause(500);
             dealerValue = calculateHandValue(dealerHand); // Calculate value of dealer hand
             System.out.println("Dealer's hand: " + dealerHand + " -> Total: " + dealerValue); // Display dealer hand
+            pause(500);
 
             if (dealerValue > 21) { // Checks if the dealer busted
                 System.out.println("Dealer busts!"); 
@@ -261,6 +276,7 @@ public class Blackjack {
 
         if (!dealerBust) {
             System.out.println("Dealer stands with total: " + calculateHandValue(dealerHand)); // Displays the total of the dealer hand if it did not bust
+            pause(1000);
         }
     }
 
@@ -268,10 +284,13 @@ public class Blackjack {
         int dealerTotal = calculateHandValue(dealerHand);
         boolean dealerHasBlackjack = dealerTotal == 21 && dealerHand.size() == 2; // Check if dealer has natural blackjack
         System.out.println("\nRound Results");
+        pause(500);
         if (dealerHasBlackjack) {
             System.out.println("Dealer reveals: " + dealerHand + " -> Blackjack!");
+            pause(500);
         }
         System.out.println("Dealer total: " + dealerTotal);
+        pause(500);
         for (int i = 0; i < playerHand.size(); i++) {
             int playerTotal = calculateHandValue(playerHand.get(i)); // Calculates the value of the hands
             int handBet = bet.get(i); // Sets the bet that each hand has
@@ -280,26 +299,34 @@ public class Blackjack {
                 if (playerBlackjack.get(i)) { // If the player also has a blackjack
                     Currency.setMoney(Currency.getMoney() + handBet);
                     System.out.println("Push (Both the dealer and player have Blackjack). Bet returned.");
+                    pause(500);
                 } else {
                     System.out.println("Dealer has Blackjack! You lose $" + handBet); // Player loss
+                    pause(500);
                 }
             } else if (playerBust.get(i)) {
                 System.out.println("Bust! You lose $" + handBet); // Money lost
+                pause(500);
             } else if (playerBlackjack.get(i)) { // If the player got a Blackjack
                 int payout = (int) (handBet * 1.5); // Calculates the payout (Money was removed at the start, so payout needs to be calc'd seperately)
                 Currency.setMoney(Currency.getMoney() + handBet + payout); // Money gained
                 System.out.println("Blackjack! You win $" + payout); 
+                pause(500);
             } else if (dealerBust) { // If the dealer busted
                 Currency.setMoney(Currency.getMoney() + handBet * 2); // Returns double the bet (original bet + winnings)
                 System.out.println("Dealer busts! You win $" + handBet);
+                pause(500);
             } else if (playerTotal > dealerTotal) { // If the player stood with a higher score than the dealer
                 Currency.setMoney(Currency.getMoney() + handBet * 2);
                 System.out.println("You stood higher than the dealer! You win $" + handBet);
+                pause(500);
             } else if (playerTotal < dealerTotal) { // If the player stood with a lower score than the dealer
                 System.out.println("You stood lower than the dealer! You lose $" + handBet);
+                pause(500);
             } else {
                 Currency.setMoney(Currency.getMoney() + handBet);
                 System.out.println("Push. Your bet is returned."); // If the dealer and player have the same amount
+                pause(500);
             }
             if (bet.size() != playerHand.size()) { // Debugging catch for desync bet and hands
                 System.out.println("WARNING: Bets and hands desynced! Hands=" + playerHand.size() + " Bets=" + bet.size());
