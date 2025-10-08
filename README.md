@@ -82,7 +82,7 @@ A classic card game where players compete against the dealer to get as close to 
 - **Push**: Tie with dealer (bet returned)
 
 #### Features
-- Support for up to 20 hands per round
+- Support for up to 20 hands per round (More if splitting)
 - Advanced mechanics: splitting, doubling down
 - 8-deck shoe with automatic reshuffling at 75% depletion
 - Natural blackjack detection
