@@ -8,7 +8,7 @@ public class Currency {
     }
 
     public static int getMoney(){
-        return money;
+        return Math.abs(money);
     }
 
     public static void setName(String p){
