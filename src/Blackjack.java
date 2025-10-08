@@ -36,7 +36,7 @@ public class Blackjack {
                 if (hands >= 1 && hands <= 20) {
                     break;
                 } else {
-                    System.out.println("Invalid input! Enter an integer between 1 and 20."); // In input integer is out of bounds
+                    System.out.println("Invalid input! Enter an integer between 1 and 20."); // If input integer is out of bounds
                 }
             } else {
                 System.out.println("Invalid input! Please enter an integer."); // If input is not an integer
@@ -45,8 +45,7 @@ public class Blackjack {
         }
 
         for (int i = 0; i < hands; i++){ // Iterates over all hands to get every bet
-            int j = i + 1; // True hand count (instead of using array index)
-            System.out.println("How much would you like to bet on hand " + j + "?");
+            System.out.println("How much would you like to bet on hand " + (i+1) + "?"); // i+1 to make it more user friendly (as arrays and iteration start at 0)
             System.out.println("You currently have: $" + Currency.getMoney());
             System.out.println("You are able to bet 0 if you run out of money or do not want to bet");
 
@@ -76,7 +75,7 @@ public class Blackjack {
         }
 
         if (!isShuffled){
-            shoe.shuffle(); // Initial deck shuffle, it is shuffled in Deck afterwards
+            shoe.shuffle(); // Initial deck shuffle, it is shuffled in Deck afterwards (if 75% of the deck is used it reshuffles)
             System.out.println("Shuffling the deck");
             isShuffled = true;
         }
@@ -89,8 +88,8 @@ public class Blackjack {
         playerHand.clear(); // Clears any remaining cards from the previous game
         for (int i = 0; i < hands; i++) {
             playerHand.add(new ArrayList<>()); // Makes a sub-arraylist for each hand (2nd dimension)
-            playerHand.get(i).add(shoe.deal());
-            playerHand.get(i).add(shoe.deal());
+            playerHand.get(i).add(shoe.deal()); // Deals the first card to each hand
+            playerHand.get(i).add(shoe.deal()); // Deals the second card to each hand
         }
 
         playerBust.clear(); // Initialize the playerBust and playerBlackjack states
@@ -171,11 +170,11 @@ public class Blackjack {
                     break; // Stops the player from playing this hand
                 }
 
-                System.out.println("Choose action: (H)it, (S)tand, (D)ouble, S(P)lit"); // Lets the player choose what they want to do
+                System.out.println("Choose action: (H)it, (S)tand, (D)ouble, S(P)lit (Case insensitive)"); // Lets the player choose what they want to do
                 
                 String choice = "";
                 while (true) { // input validation for player choice
-                    choice = scanner.next().toLowerCase();
+                    choice = scanner.next().toLowerCase(); // Convert to lowercase to allow for case insensitive input
                     if (choice.equals("h") || choice.equals("s") || choice.equals("d") || choice.equals("p")) {
                         break;
                     } else {
@@ -245,7 +244,7 @@ public class Blackjack {
 
         while (true) { // Infinite loop until dealer busts or stands
             int dealerValue = calculateHandValue(dealerHand);
-            if (dealerValue >= 17) break; // Dealer stands on 17 or higher
+            if (dealerValue >= 17) break; // Dealer stands on soft 17 or higher
             Card newCard = shoe.deal(); // Hits if the dealer value is not 17 or higher
             dealerHand.add(newCard); // Adds the new card
             System.out.println("Dealer hits: " + newCard); // Displays the card the dealer pulls
@@ -291,7 +290,7 @@ public class Blackjack {
                 Currency.setMoney(Currency.getMoney() + handBet + payout); // Money gained
                 System.out.println("Blackjack! You win $" + payout); 
             } else if (dealerBust) { // If the dealer busted
-                Currency.setMoney(Currency.getMoney() + handBet * 2);
+                Currency.setMoney(Currency.getMoney() + handBet * 2); // Returns double the bet (original bet + winnings)
                 System.out.println("Dealer busts! You win $" + handBet);
             } else if (playerTotal > dealerTotal) { // If the player stood with a higher score than the dealer
                 Currency.setMoney(Currency.getMoney() + handBet * 2);
