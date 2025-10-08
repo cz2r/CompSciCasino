@@ -71,14 +71,14 @@ public class App {
                             System.out.println("Welcome to Slots!");
                             greetedSlots = true;
                         }
-                        // Insert your method here
+                        Slots.game();
                     }
                     case 3 -> {
                         if (!greetedRoulette){
                             System.out.println("Welcome to Buckshot Roulette!");
                             greetedRoulette = true;
                         }
-                        // Insert your method here
+                        BuckshotRoulette.game();
                     }
                     default -> {
                         System.out.println("Invalid input! Please enter 1, 2, or 3."); // If the integer is not 1 2 or 3
