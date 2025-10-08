@@ -71,7 +71,7 @@ public class Blackjack {
 
         System.out.println("Your final bets are: ");
         for (int i = 0; i < hands; i++){
-            System.out.println(bet.get(i) + " for hand " + (i+1)); // Prints every hand and the bets placed on them
+            System.out.println("$" + bet.get(i) + " for hand " + (i+1)); // Prints every hand and the bets placed on them
             pause(500); // Small pause for readability
         }
 
