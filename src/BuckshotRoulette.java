@@ -186,13 +186,19 @@ public class BuckshotRoulette {
     static List<String> getAllowedItemsForPlayer() {
         List<String> allowed = new ArrayList<>();
         for (String k : playerItems.keySet()) {
-            if (k.equals("Cig")) {
-                // Cig allowed always if present
-                if (playerItems.get(k) > 0) allowed.add(k);
-            } else if (k.equals("Glass")) {
-                if (playerItems.get(k) > 0 && !playerGlassUsedThisTurn) allowed.add(k);
-            } else if (k.equals("Saw")) {
-                if (playerItems.get(k) > 0 && !playerSawUsedThisTurn) allowed.add(k);
+            switch (k) {
+                case "Cig" -> {
+                    // Cig allowed always if present
+                    if (playerItems.get(k) > 0) allowed.add(k);
+                }
+                case "Glass" -> {
+                    if (playerItems.get(k) > 0 && !playerGlassUsedThisTurn) allowed.add(k);
+                }
+                case "Saw" -> {
+                    if (playerItems.get(k) > 0 && !playerSawUsedThisTurn) allowed.add(k);
+                }
+                default -> {
+                }
             }
         }
         return allowed;
@@ -201,7 +207,7 @@ public class BuckshotRoulette {
     // Dealer turn: smarter decisions; returns true if dealer gets an extra turn
     static boolean dealerAction() {
         System.out.println("\nDealer's turn...");
-        boolean extraTurn = false;
+        boolean extraTurn;
 
         // Dealer checks next shell chance (but doesn't reveal it unless uses Glass)
         boolean nextShellLive = chamber.peek() != null && chamber.peek();
@@ -218,12 +224,10 @@ public class BuckshotRoulette {
                 if (nextShellLive && dealerItems.containsKey("Saw") && !dealerSawUsedThisTurn) {
                     useItem("Saw", dealerItems, false);
                     pause("", 900);
-                    nextShellLive = chamber.peek(); // knowledge unchanged but sawActiveDealer set
                 } else if (dealerItems.containsKey("Glass") && !dealerGlassUsedThisTurn) {
                     // If dealer has glass and will benefit, use it
                     useItem("Glass", dealerItems, false);
                     pause("", 900);
-                    nextShellLive = chamber.peek(); // update knowledge after glass
                 }
             }
         }
