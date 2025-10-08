@@ -4,7 +4,7 @@ public class Currency {
     private static String playerName;
 
     public static void setMoney(int m){ // Getter and setter for the money value
-        Currency.money = m;
+        Currency.money = Math.abs(m);
     }
 
     public static int getMoney(){
