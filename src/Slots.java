@@ -8,52 +8,51 @@ public class Slots {
     private static final Random random = new Random(); // randomsigs it 
 
     public static void game() {
-        Scanner scanner = new Scanner(System.in);
-        int coins = Currency.getMoney(); // starting money
-        System.out.println("welcome to erin's slot machine "); // greet
-        System.out.println("you start with " + coins + " dollars."); // show ur balance
-
-        while (coins > 0) { //makes sure they aint broke yns
-            System.out.println("\nyou have " + coins + " dollars."); //shows balance
-            System.out.print("how much do you want to gamble (1-3, or 0 to quit): "); //the prompt for player to gamble how much
-            int bet = scanner.nextInt();
-
-            if (bet == 0) {
-                System.out.println("thanks for your money fool, you finished with " + coins + " dollars."); // quit the game like a noob
-                break;
-            }
-            if (bet < 1 || bet > 3 || bet > coins) {
-                System.out.println("bro dont fat finger"); // if they dont put the right digits, or they too broke to bet that amount, it restarts the sequence
-                continue;
-            }
-
-            coins -= bet;
-            String[][] reels = spinReels(); // starts the game 
-
-            // display reels
-            for (int row = 0; row < 3; row++) { // shows the lines and rows 
-                for (int col = 0; col < 3; col++) { // structure
-                    System.out.printf("%-15s", reels[row][col]); // structure, and makes the rows/columns not so squished
+        try (Scanner scanner = new Scanner(System.in)) {
+            int coins = Currency.getMoney(); // starting money
+            System.out.println("welcome to erin's slot machine "); // greet
+            System.out.println("you start with " + coins + " dollars."); // show ur balance
+            
+            while (coins > 0) { //makes sure they aint broke yns
+                System.out.println("\nyou have " + coins + " dollars."); //shows balance
+                System.out.print("how much do you want to gamble (1-3, or 0 to quit): "); //the prompt for player to gamble how much
+                int bet = scanner.nextInt();
+                
+                if (bet == 0) {
+                    System.out.println("thanks for your money fool, you finished with " + coins + " dollars."); // quit the game like a noob
+                    break;
                 }
-                System.out.println(); //show the results
+                if (bet < 1 || bet > 3 || bet > coins) {
+                    System.out.println("bro dont fat finger"); // if they dont put the right digits, or they too broke to bet that amount, it restarts the sequence
+                    continue;
+                }
+                
+                coins -= bet;
+                String[][] reels = spinReels(); // starts the game
+                
+                // display reels
+                for (int row = 0; row < 3; row++) { // shows the lines and rows
+                    for (int col = 0; col < 3; col++) { // structure
+                        System.out.printf("%-15s", reels[row][col]); // structure, and makes the rows/columns not so squished
+                    }
+                    System.out.println(); //show the results
+                }
+                
+                // checks winnings
+                int winnings = calculateWinnings(reels, bet);
+                coins += winnings;
+                
+                if (winnings > 0) {
+                    System.out.println("you won " + winnings + " coins"); // ya win
+                } else {
+                    System.out.println("loss, 99% of gamblers quit before winning big"); // ya lost
+                }
             }
-
-            // checks winnings
-            int winnings = calculateWinnings(reels, bet);
-            coins += winnings;
-
-            if (winnings > 0) {
-                System.out.println("you won " + winnings + " coins"); // ya win
-            } else {
-                System.out.println("loss, 99% of gamblers quit before winning big"); // ya lost
+            
+            if (coins <= 0) {
+                System.out.println("your broke, game over."); // literally game over, cuz they vroke
             }
-        }
-
-        if (coins <= 0) {
-            System.out.println("your broke, game over."); // literally game over, cuz they vroke
-        }
-
-        scanner.close();
+        } // starting money
     }
 
     // spins reels (3x3 grid, random symbols)
