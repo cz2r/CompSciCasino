@@ -191,15 +191,18 @@ public class Blackjack {
                         playing = false; // If the player stands on that hand then move onto the next hand
 
                     case "d" -> { // Double Down
-                        if (bet.get(i) <= Currency.getMoney()) {
+                        if (bet.get(i) <= Currency.getMoney() && playerHand.get(i).size() == 2) { // Only allow double down if the player has enough money and has only 2 cards
                             Currency.setMoney(Currency.getMoney() - bet.get(i)); // Remove extra bet from the players account
                             bet.set(i, bet.get(i) * 2); // Doubles the bet on that hand
                             playerHand.get(i).add(shoe.deal()); // One more card
                             System.out.println("Doubled down. New bet: " + bet.get(i)); // Display the new bet
                             playing = false; // Must stand after double
-                        } else {
+                        } else if (bet.get(i) > Currency.getMoney()) { // If the player does not have enough money to double down
                             System.out.println("Not enough money to double down."); 
-                        } // Refuse double down if not possible, then returns back to the switch to allow user to pick another action
+                        } else { // If the player has more than 2 cards already (hit once already)
+                            System.out.println("You can only double down on your first two cards.");
+                        }
+                        // Refuse double down if not possible, then returns back to the switch to allow user to pick another action
                     }
 
                     case "p" -> { // Split
