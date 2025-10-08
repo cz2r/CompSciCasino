@@ -53,13 +53,12 @@ public class Blackjack {
             // Input validation for bet amount
             do {
                 if (scanner.hasNextInt()) {
-                    bet.add(Math.abs(scanner.nextInt())); // Adds the bet value to each hand
-                    Currency.setMoney(Currency.getMoney() - bet.get(i)); // Removes the money that was bet from the players account
-                    if (Currency.getMoney() < 0) { // If the bet results in the balance going negative
-                        Currency.setMoney(Currency.getMoney() + bet.get(i)); // Readd the removed money
-                        System.out.println("You do not have enough money to do that! You have $" + Currency.getMoney());
-                        bet.remove(i); // Remove the bet from that hand, and reject the value
+                    int betAmount = scanner.nextInt();
+                    if (betAmount > Currency.getMoney() || betAmount < 0) { // If the bet results in the balance going negative or negative value
+                        System.out.println("You do not have enough money to do that or you tried to input a negative value! You have $" + Currency.getMoney());
                     } else {
+                        bet.add(Math.abs(betAmount)); // Adds the bet value to each hand
+                        Currency.setMoney(Currency.getMoney() - betAmount); // Removes the money that was bet from the players account
                         break;
                     }
                 } else {
