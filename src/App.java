@@ -49,19 +49,7 @@ public class App {
                     case 1 -> {
                         if (!greetedBlackjack){
                             System.out.println("Welcome to Blackjack!");
-                            System.out.println("\n\tBLACKJACK RULES: "); // Rules are from https://gist.github.com/MelissaBruno/cabf119e2f6573de4fe5 (slight modifications)
-                            System.out.println("\t-Each player is dealt 2 cards. The dealer is dealt 2 cards with one face-up and one face-down.");
-                            System.out.println("\t-Cards are equal to their value with face cards being 10 and an Ace being 1 or 11.");
-                            System.out.println("\t-The players cards are added up for their total.");
-                            System.out.println("\t-Players Hit to gain another card from the deck. Players Stand to keep their current card total.");
-                            System.out.println("\t-Dealer Hits until they equal or exceed 17.");
-                            System.out.println("\t-The goal is to have a higher card total than the dealer without going over 21.");
-                            System.out.println("\t-If the hand total equals the dealer total, it is a Push and the hand ends.");
-                            System.out.println("\t-Players win their bet if they beat the dealer.");
-                            System.out.println("\t-Players win 1.5x their bet if they get Blackjack which is 21 (Only for natural blackjacks).");
-                            System.out.println("\t-Players can split their hand if they show a pair, and it will create a new hand with that card and the same bet as the first.");
-                            System.out.println("\t-Players can also choose to double down to double their bet on a hand, hit one card, then stand.");
-                            System.out.println();
+                            System.out.println("Refer to the README for rules and features!"); // Only greets the first time they play blackjack
                             greetedBlackjack = true;
                         }
                         Blackjack.game();
@@ -69,6 +57,7 @@ public class App {
                     case 2 -> {
                         if (!greetedSlots){
                             System.out.println("Welcome to Slots!");
+                            System.out.println("Refer to the README for rules and features!"); // Only greets the first time they play slots
                             greetedSlots = true;
                         }
                         Slots.game();
@@ -76,6 +65,7 @@ public class App {
                     case 3 -> {
                         if (!greetedRoulette){
                             System.out.println("Welcome to Buckshot Roulette!");
+                            System.out.println("Refer to the README for rules and features!"); // Only greets the first time they play buckshot roulette
                             greetedRoulette = true;
                         }
                         BuckshotRoulette.game();

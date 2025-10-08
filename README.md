@@ -16,7 +16,7 @@ A Java-based casino gaming application featuring three classic games: Blackjack,
 - [Overview](#overview)
 - [Features](#features)
 - [How to Run](#how-to-run)
-- [Game Descriptions](#game-descriptions)
+- [Game Descriptions and Rules](#game-descriptions)
   - [Blackjack](#blackjack)
   - [Slots](#slots)
   - [Buckshot Roulette](#buckshot-roulette)
@@ -44,7 +44,7 @@ This casino application allows players to enjoy three different games with a uni
 ## How to Run
 
 ### Prerequisites
-- Java Development Kit (JDK) 8 or higher
+- Java Development Kit (JDK) 25 or higher
 - Command line terminal or Java IDE
 
 ### Running the Application
