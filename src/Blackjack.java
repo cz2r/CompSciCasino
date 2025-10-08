@@ -54,10 +54,12 @@ public class Blackjack {
             do {
                 if (scanner.hasNextInt()) {
                     int betAmount = scanner.nextInt();
-                    if (betAmount > Currency.getMoney() || betAmount < 0) { // If the bet results in the balance going negative or negative value
-                        System.out.println("You do not have enough money to do that or you tried to input a negative value! You have $" + Currency.getMoney());
+                    if (betAmount > Currency.getMoney()) { // If the bet results in the balance going negative or negative value
+                        System.out.println("You do not have enough money to do that! You have $" + Currency.getMoney());
+                    } else if (betAmount < 0) {
+                        System.out.println("You cannot bet a negative amount!");
                     } else {
-                        bet.add(Math.abs(betAmount)); // Adds the bet value to each hand
+                        bet.add(betAmount); // Adds the bet value to each hand
                         Currency.setMoney(Currency.getMoney() - betAmount); // Removes the money that was bet from the players account
                         break;
                     }
@@ -70,8 +72,7 @@ public class Blackjack {
 
         System.out.println("Your final bets are: ");
         for (int i = 0; i < hands; i++){
-            int j = i + 1;
-            System.out.println(bet.get(i) + " for hand " + j); // Prints every hand and the bets placed on them
+            System.out.println(bet.get(i) + " for hand " + (i+1)); // Prints every hand and the bets placed on them
         }
 
         if (!isShuffled){
