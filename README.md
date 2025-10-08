@@ -244,9 +244,8 @@ src/
 
 ## Credits
 
-- **Blackjack Rules**: Adapted from [MelissaBruno's Blackjack Rules](https://gist.github.com/MelissaBruno/cabf119e2f6573de4fe5)
-- **Deck Implementation**: Based on code by Mr Freeman, modified by Tanay K
-- **Additional Resources**: W3Schools, Stack Overflow
+- **Card Deck Implementation**: Based on code by Mr Freeman, modified by Tanay K
+- **Additional Resources Used**: W3Schools, Stack Overflow
 - **Pokemon Slot Theme**: Inspired by Pokemon Red slot machine
 
 ---
