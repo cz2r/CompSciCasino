@@ -4,11 +4,11 @@ public class Currency {
     private static String playerName;
 
     public static void setMoney(int m){ // Getter and setter for the money value
-        Currency.money = Math.abs(m);
+        Currency.money = Math.abs(m); // Ensure that money is never negative
     }
 
     public static int getMoney(){
-        return Math.abs(money);
+        return Math.abs(money); // Ensure that money is never negative
     }
 
     public static void setName(String p){

@@ -18,7 +18,7 @@ class Deck {
     
     public Deck(){
         String[] values = {"Ace","2","3","4","5","6","7","8","9","10","Jack","Queen","King"}; // Create value array
-        int[] trueValues = {11,2,3,4,5,6,7,8,9,10,10,10,10}; // Create array for the true values of each card
+        int[] trueValues = {11,2,3,4,5,6,7,8,9,10,10,10,10}; // Create array for the true values of each card (in terms of blackjack)
         String[] suits = {"Spades","Clubs","Diamonds","Hearts"}; // Create suits array
         deck = new Card[52 * numDeck]; // Creates a deck array with how many cards are in the shoe
         int counter = 0;
@@ -36,7 +36,7 @@ class Deck {
         Card toDeal = deck[top]; // Selects the top card of the deck to be dealt
         top++; // Adds one to the top card (essentially removes the card)
         if(top >= deck.length){
-            shuffle(); // If the top card is out of bounds then shuffles again and sets the top to 0 (if it for some reason doesn't shuffle at 75% or top becomes out of bounds)
+            shuffle(); // If the top card is out of bounds then shuffles again and sets the top to 0 (debugging purposes)
             top = 0;
         } else if (top >= deck.length * 0.75) {
             System.out.println("Reshuffling the shoe..."); // Reshuffles shoe when there is 25% left to help prevent card counting
@@ -48,7 +48,7 @@ class Deck {
         return toDeal;
     }
     
-    public void shuffle() { // Using Fisher-Yates shuffle instead of swapping pairs
+    public void shuffle() { // Using Fisher-Yates shuffling algorithm
         Random rand = new Random();
         for (int i = deck.length - 1; i > 0; i--) { // Randomly swaps each element with another element at a random position that hasnt been shuffled yet
             int j = rand.nextInt(i + 1); 

@@ -22,12 +22,7 @@ public class Blackjack {
         System.out.println("How many hands would you like to play? (Please input an integer thats less than 20)");
         
         // Clear bets and hands for the round (ensures no leftover data from previous round)
-        bet.clear();
-        playerHand.clear();
-        playerBust.clear();
-        playerBlackjack.clear();
-        dealerHand.clear();
-        dealerBust = false;
+        resetRound();
 
         // Input validation for hand count
         while (true) {
@@ -50,7 +45,7 @@ public class Blackjack {
             System.out.println("You are able to bet 0 if you run out of money or do not want to bet");
 
             // Input validation for bet amount
-            do {
+            while (true) {
                 if (scanner.hasNextInt()) {
                     int betAmount = scanner.nextInt();
                     if (betAmount > Currency.getMoney()) { // If the bet results in the balance going negative or negative value
@@ -66,7 +61,7 @@ public class Blackjack {
                     System.out.println("Invalid input! Please enter a positive integer.");
                     scanner.next(); // Ensure that it doesn't get stuck on invalid input
                 }
-            } while (true);
+            }
         }
 
         System.out.println("Your final bets are: ");
@@ -124,7 +119,7 @@ public class Blackjack {
             return; // Skip the rest - cant play anything else
         } else {
             System.out.println("Dealer does not have a blackjack! Round continues...");
-            System.out.println("Cards in shoe: " + (shoe.getCardsInDeck() - shoe.getTopCard()) + " / " + shoe.getCardsInDeck());
+            System.out.println("Cards in shoe: " + (shoe.getCardsInDeck() - shoe.getTopCard()) + " / " + shoe.getCardsInDeck()); // Display how many cards are left in the shoe
         }
 
         playHands();
@@ -333,5 +328,14 @@ public class Blackjack {
             }
         }
         System.out.println("You now have: $" + Currency.getMoney());
+    }
+
+    private static void resetRound() { // Resets all the variables for a new round
+        bet.clear();
+        playerHand.clear();
+        playerBust.clear();
+        playerBlackjack.clear();
+        dealerHand.clear();
+        dealerBust = false;
     }
 }
