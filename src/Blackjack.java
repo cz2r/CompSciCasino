@@ -277,6 +277,7 @@ public class Blackjack {
 
     private static void payouts() { // Payout Logic
         int dealerTotal = calculateHandValue(dealerHand);
+        int totalWinnings = 0;
         boolean dealerHasBlackjack = dealerTotal == 21 && dealerHand.size() == 2; // Check if dealer has natural blackjack
         System.out.println("\nRound Results");
         pause(500);
@@ -298,25 +299,31 @@ public class Blackjack {
                 } else {
                     System.out.println("Dealer has Blackjack! You lose $" + handBet); // Player loss
                     pause(500);
+                    totalWinnings -= handBet;
                 }
             } else if (playerBust.get(i)) {
                 System.out.println("Bust! You lose $" + handBet); // Money lost
+                totalWinnings -= handBet;
                 pause(500);
             } else if (playerBlackjack.get(i)) { // If the player got a Blackjack
                 int payout = (int) (handBet * 1.5); // Calculates the payout (Money was removed at the start, so payout needs to be calc'd seperately)
                 Currency.setMoney(Currency.getMoney() + handBet + payout); // Money gained
-                System.out.println("Blackjack! You win $" + payout); 
+                System.out.println("Blackjack! You win $" + (payout+handBet)); 
+                totalWinnings += (payout+handBet);
                 pause(500);
             } else if (dealerBust) { // If the dealer busted
                 Currency.setMoney(Currency.getMoney() + handBet * 2); // Returns double the bet (original bet + winnings)
                 System.out.println("Dealer busts! You win $" + handBet);
+                totalWinnings += handBet;
                 pause(500);
             } else if (playerTotal > dealerTotal) { // If the player stood with a higher score than the dealer
                 Currency.setMoney(Currency.getMoney() + handBet * 2);
                 System.out.println("You stood higher than the dealer! You win $" + handBet);
+                totalWinnings += handBet;
                 pause(500);
             } else if (playerTotal < dealerTotal) { // If the player stood with a lower score than the dealer
                 System.out.println("You stood lower than the dealer! You lose $" + handBet);
+                totalWinnings -= handBet;
                 pause(500);
             } else {
                 Currency.setMoney(Currency.getMoney() + handBet);
@@ -327,7 +334,17 @@ public class Blackjack {
                 System.out.println("WARNING: Bets and hands desynced! Hands=" + playerHand.size() + " Bets=" + bet.size());
             }
         }
+
+        if (totalWinnings > 0) { // Displays total winnings/losses for the round
+            System.out.println("Total winnings this round: $" + totalWinnings);
+        } else if (totalWinnings < 0) {
+            System.out.println("Total losses this round: $" + (-totalWinnings)); // -totalWinnings to make it positive
+        } else {
+            System.out.println("You broke even this round.");
+        }
+        
         System.out.println("You now have: $" + Currency.getMoney());
+
     }
 
     private static void resetRound() { // Resets all the variables for a new round

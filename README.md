@@ -87,6 +87,7 @@ A classic card game where players compete against the dealer to get as close to 
 - 8-deck shoe with automatic reshuffling at 75% depletion
 - Natural blackjack detection
 - Comprehensive input validation
+- Inform user on total winnings and losses
 
 ---
 
