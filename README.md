@@ -78,7 +78,7 @@ A classic card game where players compete against the dealer to get as close to 
 
 #### Payouts
 - **Regular Win**: 1:1 (win amount equal to bet)
-- **Natural Blackjack**: 1.5:1 (21 with first two cards only)
+- **Natural Blackjack**: 3:2 (21 with first two cards only)
 - **Push**: Tie with dealer (bet returned)
 
 #### Features
