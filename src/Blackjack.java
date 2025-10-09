@@ -17,6 +17,7 @@ public class Blackjack {
     private static boolean dealerBust = false; // Checks if the dealer went over 21
     private static boolean isShuffled = false; // Checks if the deck has been shuffled once
     private static int hands; // Create an integer to store the number of hands to be played
+    private static final ArrayList<Integer> insuranceBet = new ArrayList<>(); // Create an arrayList for insurance bets on each hand
 
     public static void game(){
         System.out.println("How many hands would you like to play? (Please input an integer thats less than 20)");
@@ -108,6 +109,10 @@ public class Blackjack {
 
         System.out.println("Dealer shows a " + dealerHand.get(0)); // Shows the dealers top card
         pause(500); // Small pause for readability
+
+        handleInsurance(); // Offer insurance if dealer's face-up card is an Ace
+        pause(500);
+
         System.out.println("Dealer peeks at their other card...");
         pause(500);
 
@@ -287,6 +292,9 @@ public class Blackjack {
         }
         System.out.println("Dealer total: " + dealerTotal);
         pause(500);
+
+        handleInsurancePayouts(dealerHasBlackjack); // Handle insurance payouts first
+
         for (int i = 0; i < playerHand.size(); i++) {
             int playerTotal = calculateHandValue(playerHand.get(i)); // Calculates the value of the hands
             int handBet = bet.get(i); // Sets the bet that each hand has
@@ -347,6 +355,127 @@ public class Blackjack {
 
     }
 
+    private static void handleInsurance() {
+        if (!dealerHand.get(0).getValue().equals("Ace")) {
+            return; // Only offer insurance if the dealer's face-up card is an Ace
+        } 
+
+        System.out.println("Dealer's face-up card is an Ace. Would you like to take insurance? (Y/N)");
+        System.out.println("Insurance costs half your original bet and pays 2:1 if the dealer has a blackjack.");
+        System.out.println("You currently have: $" + Currency.getMoney());
+        pause(500);
+
+        OUTER:
+        while (true) {
+            String choice1 = scanner.next().toLowerCase();
+            switch (choice1) {
+                case "y" -> {
+                    break OUTER;
+                }
+                case "n" -> {
+                    System.out.println("No insurance taken for any hands.");
+                    return; // No insurance taken
+                }
+                default -> System.out.println("Invalid choice. Please enter Y or N.");
+            }
+        }
+
+        for (int i = 0; i < hands; i++) {
+            int insuranceCost = bet.get(i) / 2; // Insurance costs half the original bet
+            System.out.println("\nHand " + (i + 1) + ": " + playerHand.get(i) + " with bet $" + bet.get(i));
+            System.out.println("Would you like to take insurance for this hand? (Y/N)");
+            System.out.println("Insurance cost: $" + insuranceCost);
+
+            String choice = "";
+            while (true) { // Input validation for insurance choice
+                choice = scanner.next().toLowerCase(); // Convert to lowercase to allow for case insensitive input
+                if (choice.equals("y") || choice.equals("n")) {
+                    break;
+                } else {
+                    System.out.println("Invalid choice. Please enter Y or N.");
+                }
+            }
+
+            if (choice.equals("y")) {
+                if (insuranceCost > Currency.getMoney()) {
+                    System.out.println("Not enough money to take insurance for this hand.");
+                } else {
+                    Currency.setMoney(Currency.getMoney() - insuranceCost); // Deduct insurance cost from player's money
+                    insuranceBet.add(insuranceCost); // Record the insurance bet
+                    System.out.println("Insurance taken for hand " + (i + 1) + ". You paid $" + insuranceCost);
+                }
+            } else {
+                insuranceBet.add(0); // No insurance taken for this hand
+                System.out.println("No insurance taken for hand " + (i + 1) + ".");
+            }
+            pause(500);
+        }
+
+        int totalInsuranceCost = 0;
+        int insuredHands = 0;
+        for (int amount : insuranceBet) {
+            if (amount > 0) {
+                totalInsuranceCost += amount;
+                insuredHands++;
+            }
+        }
+
+        if (insuredHands > 0) {
+            System.out.println("\nInsurance summary:");
+            System.out.println("\nTotal insurance cost for this round: $" + totalInsuranceCost + " across " + insuredHands + " hands.");
+            System.out.println("You currently have: $" + Currency.getMoney());
+            pause(500);
+        } else {
+            System.out.println("\nNo insurance taken for any hands.");
+            pause(500);
+        }
+    }
+
+    private static void handleInsurancePayouts(boolean dealerHasBlackjack) {
+        if (insuranceBet.isEmpty()) {
+            return;
+        }
+
+        boolean hasInsurance = false;
+        for (int amount : insuranceBet) {
+            if (amount > 0) {
+                hasInsurance = true;
+                break;
+            }
+        }
+        
+        if (!hasInsurance) {
+            return;
+        }
+        
+        System.out.println("\nInsurance Results");
+        pause(500);
+        
+        int totalInsurancePayout = 0;
+        int totalInsuranceLoss = 0;
+        
+        for (int i = 0; i < insuranceBet.size(); i++) {
+            if (insuranceBet.get(i) > 0) { // Only process hands with insurance
+                if (dealerHasBlackjack) {
+                    int payout = insuranceBet.get(i) * 2; // Insurance pays 2:1
+                    Currency.setMoney(Currency.getMoney() + payout + insuranceBet.get(i)); // Return bet + winnings
+                    System.out.println("Hand " + (i + 1) + " insurance wins! Payout: $" + (payout + insuranceBet.get(i)));
+                    totalInsurancePayout += (payout + insuranceBet.get(i));
+                } else {
+                    System.out.println("Hand " + (i + 1) + " insurance loses: $" + insuranceBet.get(i));
+                    totalInsuranceLoss += insuranceBet.get(i);
+                }
+                pause(500);
+            }
+        }
+        
+        if (dealerHasBlackjack && totalInsurancePayout > 0) {
+            System.out.println("Total insurance payout: $" + totalInsurancePayout);
+        } else if (!dealerHasBlackjack && totalInsuranceLoss > 0) {
+            System.out.println("Total insurance lost: $" + totalInsuranceLoss);
+        }
+    }
+
     private static void resetRound() { // Resets all the variables for a new round
         bet.clear();
         playerHand.clear();
@@ -354,5 +483,6 @@ public class Blackjack {
         playerBlackjack.clear();
         dealerHand.clear();
         dealerBust = false;
+        insuranceBet.clear();
     }
 }
