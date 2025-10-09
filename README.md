@@ -75,11 +75,13 @@ A classic card game where players compete against the dealer to get as close to 
 - Players can **Hit** (take another card), **Stand** (keep current total), **Double Down** (double bet, get one card, then stand), or **Split** (separate pairs into two hands)
 - Dealer hits until reaching 17 or higher
 - Goal: Beat the dealer without exceeding 21
+- Players can also take an **Insurance Bet** which lets them bet on the dealer getting a blackjack (Only if dealer shows an ace, and pays 1:1 if the dealer does have a blackjack)
 
 #### Payouts
 - **Regular Win**: 1:1 (win amount equal to bet)
 - **Natural Blackjack**: 3:2 (21 with first two cards only)
 - **Push**: Tie with dealer (bet returned)
+- **Insurance**: 2:1 (Make back the bet, only if the dealer has a natural blackjack and insurance was betted on)
 
 #### Features
 - Support for up to 20 hands per round (More if splitting)
@@ -88,6 +90,7 @@ A classic card game where players compete against the dealer to get as close to 
 - Natural blackjack detection
 - Comprehensive input validation
 - Inform user on total winnings and losses
+- Allows for user to bet insurance if the dealer shows an Ace
 
 ---
 
@@ -188,6 +191,7 @@ All players begin with **$1000**
 - Split and double down mechanics
 - Natural blackjack detection
 - Comprehensive payout system
+- Insurance betting supported
 
 #### `Slots.java`
 - 3x3 slot machine grid
