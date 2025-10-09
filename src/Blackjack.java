@@ -232,6 +232,7 @@ public class Blackjack {
                                 playerBlackjack.add(false); // New hand does not start with blackjack
                                 playerBlackjack.set(i, false); // Original hand cannot have blackjack after split
                                 playerBust.set(i, false); // original hand cannot be busted immediately after split
+                                insuranceBet.add(0); // No insurance on the new hand initially
                                 bet.add(bet.get(i)); // Duplicate bet for the new hand
                                 System.out.println("You have split. You now have " + playerHand.size() + " hands.");
                                 System.out.println("Hand " + (i + 1) + " is now: " + hand);
@@ -316,8 +317,8 @@ public class Blackjack {
             } else if (playerBlackjack.get(i)) { // If the player got a Blackjack
                 int payout = (int) (handBet * 1.5); // Calculates the payout (Money was removed at the start, so payout needs to be calc'd seperately)
                 Currency.setMoney(Currency.getMoney() + handBet + payout); // Money gained
-                System.out.println("Blackjack! You win $" + (payout+handBet)); 
-                totalWinnings += (payout+handBet);
+                System.out.println("Blackjack! You win $" + (payout)); // Displays the payout (not including original bet - profit only)
+                totalWinnings += (payout);
                 pause(500);
             } else if (dealerBust) { // If the dealer busted
                 Currency.setMoney(Currency.getMoney() + handBet * 2); // Returns double the bet (original bet + winnings)
@@ -399,6 +400,7 @@ public class Blackjack {
             if (choice.equals("y")) {
                 if (insuranceCost > Currency.getMoney()) {
                     System.out.println("Not enough money to take insurance for this hand.");
+                    insuranceBet.add(0); // No insurance taken for this hand
                 } else {
                     Currency.setMoney(Currency.getMoney() - insuranceCost); // Deduct insurance cost from player's money
                     insuranceBet.add(insuranceCost); // Record the insurance bet
