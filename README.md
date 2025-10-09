@@ -73,7 +73,7 @@ A classic card game where players compete against the dealer to get as close to 
 - Each player is dealt 2 cards; dealer gets 2 cards (one face-up, one face-down)
 - Cards are valued at face value; face cards = 10; Aces = 1 or 11
 - Players can **Hit** (take another card), **Stand** (keep current total), **Double Down** (double bet, get one card, then stand), or **Split** (separate pairs into two hands)
-- Dealer hits until reaching 17 or higher
+- Dealer stands on a soft 17 (When the dealer exceeds 17 including any aces counted as 11)
 - Goal: Beat the dealer without exceeding 21
 - Players can also take an **Insurance Bet** which lets them bet on the dealer getting a blackjack (Only if dealer shows an ace, and pays 2:1 if the dealer does have a blackjack)
 
