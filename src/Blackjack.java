@@ -5,6 +5,8 @@ import java.util.*;
  * Assistance from W3Schools, Stack Overflow
  */
 
+// TODO: Add surrender option (half bet returned, only on first two cards), test code for bugs, add more comments, code cleanup
+
 public class Blackjack {
 
     private static final Deck shoe = new Deck(); // Instantiate the shoe
