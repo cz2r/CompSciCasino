@@ -331,7 +331,7 @@ public class Blackjack {
                 pause(500);
             }
             if (bet.size() != playerHand.size()) { // Debugging catch for desync bet and hands
-                System.out.println("WARNING: Bets and hands desynced! Hands=" + playerHand.size() + " Bets=" + bet.size());
+                throw new IllegalStateException("Bets and hands desynced! Hands=" + playerHand.size() + " Bets=" + bet.size());
             }
         }
 
@@ -342,7 +342,7 @@ public class Blackjack {
         } else {
             System.out.println("You broke even this round.");
         }
-        
+
         System.out.println("You now have: $" + Currency.getMoney());
 
     }
