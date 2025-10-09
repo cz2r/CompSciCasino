@@ -293,7 +293,7 @@ public class Blackjack {
         System.out.println("Dealer total: " + dealerTotal);
         pause(500);
 
-        handleInsurancePayouts(dealerHasBlackjack); // Handle insurance payouts first
+        handleInsurancePayouts(dealerHasBlackjack); // Handle insurance payouts first if taken
 
         for (int i = 0; i < playerHand.size(); i++) {
             int playerTotal = calculateHandValue(playerHand.get(i)); // Calculates the value of the hands
@@ -367,10 +367,10 @@ public class Blackjack {
 
         OUTER:
         while (true) {
-            String choice1 = scanner.next().toLowerCase();
+            String choice1 = scanner.next().toLowerCase(); // Convert to lowercase to allow for case insensitive input
             switch (choice1) {
                 case "y" -> {
-                    break OUTER;
+                    break OUTER; // Return to offer insurance for each hand
                 }
                 case "n" -> {
                     System.out.println("No insurance taken for any hands.");
@@ -415,37 +415,37 @@ public class Blackjack {
         int insuredHands = 0;
         for (int amount : insuranceBet) {
             if (amount > 0) {
-                totalInsuranceCost += amount;
-                insuredHands++;
+                totalInsuranceCost += amount; // Calculate total insurance cost
+                insuredHands++; // Count number of hands with insurance
             }
         }
 
         if (insuredHands > 0) {
             System.out.println("\nInsurance summary:");
             System.out.println("\nTotal insurance cost for this round: $" + totalInsuranceCost + " across " + insuredHands + " hands.");
-            System.out.println("You currently have: $" + Currency.getMoney());
-            pause(500);
+            System.out.println("You currently have: $" + Currency.getMoney()); // Display remaining money after insurance
+            pause(500); // Summary of insurance taken
         } else {
-            System.out.println("\nNo insurance taken for any hands.");
+            System.out.println("\nNo insurance taken for any hands."); // Summary if no insurance taken
             pause(500);
         }
     }
 
     private static void handleInsurancePayouts(boolean dealerHasBlackjack) {
         if (insuranceBet.isEmpty()) {
-            return;
+            return; // No insurance bets were placed, ignore the payout logic
         }
 
         boolean hasInsurance = false;
         for (int amount : insuranceBet) {
             if (amount > 0) {
-                hasInsurance = true;
+                hasInsurance = true; // Check if any insurance was taken
                 break;
             }
         }
         
         if (!hasInsurance) {
-            return;
+            return; // No insurance taken, nothing to process
         }
         
         System.out.println("\nInsurance Results");
@@ -460,7 +460,7 @@ public class Blackjack {
                     int payout = insuranceBet.get(i) * 2; // Insurance pays 2:1
                     Currency.setMoney(Currency.getMoney() + payout + insuranceBet.get(i)); // Return bet + winnings
                     System.out.println("Hand " + (i + 1) + " insurance wins! Payout: $" + (payout + insuranceBet.get(i)));
-                    totalInsurancePayout += (payout + insuranceBet.get(i));
+                    totalInsurancePayout += (payout + insuranceBet.get(i)); // Track total payout
                 } else {
                     System.out.println("Hand " + (i + 1) + " insurance loses: $" + insuranceBet.get(i));
                     totalInsuranceLoss += insuranceBet.get(i);
@@ -470,9 +470,9 @@ public class Blackjack {
         }
         
         if (dealerHasBlackjack && totalInsurancePayout > 0) {
-            System.out.println("Total insurance payout: $" + totalInsurancePayout);
+            System.out.println("Total insurance payout: $" + totalInsurancePayout); 
         } else if (!dealerHasBlackjack && totalInsuranceLoss > 0) {
-            System.out.println("Total insurance lost: $" + totalInsuranceLoss);
+            System.out.println("Total insurance lost: $" + totalInsuranceLoss); // Summary of insurance results
         }
     }
 
