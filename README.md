@@ -194,6 +194,7 @@ All players begin with **$1000**
 - Natural blackjack detection
 - Comprehensive payout system
 - Insurance betting supported
+- Post-check surrender supported
 
 #### `Slots.java`
 - 3x3 slot machine grid
