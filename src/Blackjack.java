@@ -112,7 +112,6 @@ public class Blackjack {
 
         System.out.println("Dealer shows a " + dealerHand.get(0)); // Shows the dealers top card
         pause(500); // Small pause for readability
-        handleSurrender(); // Offer surrender if dealer's face-up card is a picture card
         handleInsurance(); // Offer insurance if dealer's face-up card is an Ace
         pause(500);
 
