@@ -44,7 +44,7 @@ This casino application allows players to enjoy three different games with a uni
 ## How to Run
 
 ### Prerequisites
-- Java Development Kit (JDK) 25 or higher
+- Java Development Kit (JDK) 14 or higher, 25 recommended
 - Command line terminal or Java IDE
 
 ### Running the Application
