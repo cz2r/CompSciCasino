@@ -296,7 +296,6 @@ public class Blackjack {
         System.out.println("Dealer total: " + dealerTotal);
         pause(500);
         
-        handleSurrenderPayouts();
         handleInsurancePayouts(dealerHasBlackjack); // Handle insurance payouts first if taken
 
         for (int i = 0; i < playerHand.size(); i++) {
