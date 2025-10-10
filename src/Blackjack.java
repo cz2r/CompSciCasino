@@ -112,6 +112,7 @@ public class Blackjack {
 
         System.out.println("Dealer shows a " + dealerHand.get(0)); // Shows the dealers top card
         pause(500); // Small pause for readability
+        handleSurrender();
         handleInsurance(); // Offer insurance if dealer's face-up card is an Ace
         pause(500);
 
@@ -369,6 +370,8 @@ public class Blackjack {
     }
 
     private static void surrenderLogic() {
+        int totalSurrenderHands = 0;
+        int totalReturnMoney = 0;
         System.out.println("Surrender is available if your hand is not good. Would you like to surrender? (Y/N)");
         System.out.println("Surrendering will return half your bet and render the hand as unplayable.");
         System.out.println("You can select which specific hands to surrender.");
@@ -392,8 +395,6 @@ public class Blackjack {
 
         for (int i = 0; i < hands; i++) {
             int surrenderReturn = bet.get(i) / 2; // Surrender will return half money
-            int totalSurrenderReturn = 0;
-            int totalSurrenderHands = 0;
             System.out.println("\nHand " + (i + 1) + ": " + playerHand.get(i) + " with bet $" + bet.get(i));
             System.out.println("Would you like to surrender this hand? (Y/N)");
             System.out.println("You will recieve: $" + surrenderReturn);
@@ -410,38 +411,22 @@ public class Blackjack {
 
             if (choice.equals("y")) {
                 System.out.println("You have surrendered hand " + (i+1));
-                Currency.setMoney(Currency.getMoney() + surrenderReturn);
+                Currency.setMoney(Currency.getMoney() + surrenderReturn); // Return the surrendered money immediately
                 surrenderList.add(i, 1);
-                totalSurrenderReturn++;
+                totalReturnMoney = totalReturnMoney + surrenderReturn; // Add count to surrendered hands and total returned
                 totalSurrenderHands++;
             } else {
                 System.out.println("Hand " + (i+1) + " still in play");
                 surrenderList.add(i, 0);
             }
-
-            if (totalSurrenderHands > 0) {
-                System.out.println("Surrender summary:");
-                System.out.println("Total hands surrendered: " + totalSurrenderHands);
-                System.out.println("Total money returned: " + totalSurrenderReturn);
-            } else {
-                System.out.println("All hands still in play");
-            }
-            
         }
-    }
 
-    private static void handleSurrenderPayouts(){
-        int totalSurrenderReturn = 0;
-        for (int i = 0; i < hands; i++) {
-            if (surrenderList.get(i) == 1) {
-                int surrenderReturn = bet.get(i)/2;
-                System.out.println("Hand " + (i+1) + " surrendered. Total return: $" + surrenderReturn);
-                Currency.setMoney(Currency.getMoney()+surrenderReturn);
-                totalSurrenderReturn = totalSurrenderReturn + surrenderReturn;
-            }
-        }
-        if (totalSurrenderReturn > 0) {
-            System.out.println("Total surrender return: $" + totalSurrenderReturn);
+        if (totalSurrenderHands > 0) {
+            System.out.println("Surrender summary:");
+            System.out.println("Total hands surrendered: " + totalSurrenderHands);
+            System.out.println("Total money returned: " + totalReturnMoney);
+        } else {
+            System.out.println("All hands still in play");
         }
     }
 
