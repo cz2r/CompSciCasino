@@ -327,12 +327,12 @@ public class Blackjack {
                 System.out.println("Dealer busts! You win $" + handBet);
                 totalWinnings += handBet;
                 pause(500);
-            } else if (playerTotal > dealerTotal && surrenderList.get(i) == 0) { // If the player stood with a higher score than the dealer
+            } else if (playerTotal > dealerTotal) { // If the player stood with a higher score than the dealer
                 Currency.setMoney(Currency.getMoney() + handBet * 2);
                 System.out.println("You stood higher than the dealer! You win $" + handBet);
                 totalWinnings += handBet;
                 pause(500);
-            } else if (playerTotal < dealerTotal && surrenderList.get(i) == 0) { // If the player stood with a lower score than the dealer
+            } else if (playerTotal < dealerTotal) { // If the player stood with a lower score than the dealer
                 System.out.println("You stood lower than the dealer! You lose $" + handBet);
                 totalWinnings -= handBet;
                 pause(500);
@@ -408,7 +408,7 @@ public class Blackjack {
                 }
             }
 
-            if (choice.equals("Y")) {
+            if (choice.equals("y")) {
                 System.out.println("You have surrendered hand " + (i+1));
                 Currency.setMoney(Currency.getMoney() + surrenderReturn);
                 surrenderList.add(i, 1);
@@ -423,6 +423,8 @@ public class Blackjack {
                 System.out.println("Surrender summary:");
                 System.out.println("Total hands surrendered: " + totalSurrenderHands);
                 System.out.println("Total money returned: " + totalSurrenderReturn);
+            } else {
+                System.out.println("All hands still in play");
             }
             
         }
