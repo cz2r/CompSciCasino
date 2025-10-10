@@ -78,7 +78,7 @@ public class App {
                 
                 int playInput = 0; // Checks if the input is valid
                 while (true) {
-                    System.out.println("Would you like to play again? Please enter 1 for yes and 2 for no.");
+                    System.out.println("Would you like to play again/play a different game? Please enter 1 for yes and 2 for no.");
                     if (scanner.hasNextInt()) {
                         playInput = scanner.nextInt();
                         if (playInput == 1 || playInput == 2) { // If the input is valid (1 or 2)
