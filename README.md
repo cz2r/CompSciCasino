@@ -44,7 +44,7 @@ This casino application allows players to enjoy three different games with a uni
 ## How to Run
 
 ### Prerequisites
-- Java Development Kit (JDK) 25 or higher
+- Java Development Kit (JDK) 14 or higher, 25 recommended
 - Command line terminal or Java IDE
 
 ### Running the Application
@@ -76,12 +76,14 @@ A classic card game where players compete against the dealer to get as close to 
 - Dealer stands on a soft 17 (When the dealer exceeds 17 including any aces counted as 11)
 - Goal: Beat the dealer without exceeding 21
 - Players can also take an **Insurance Bet** which lets them bet on the dealer getting a blackjack (Only if dealer shows an ace, and pays 2:1 if the dealer does have a blackjack)
+- Players can **Surrender** after the dealer checks for a blackjack, which returns half of the bet and closes the hand
 
 #### Payouts
 - **Regular Win**: 1:1 (win amount equal to bet)
 - **Natural Blackjack**: 3:2 (21 with first two cards only)
 - **Push**: Tie with dealer (bet returned)
 - **Insurance**: 2:1 (Make back the bet, only if the dealer has a natural blackjack and insurance was betted on)
+- **Surrender**: 1:2 (Returns 0.5x of the original bet)
 
 #### Features
 - Support for up to 20 hands per round (More if splitting)
@@ -192,6 +194,7 @@ All players begin with **$1000**
 - Natural blackjack detection
 - Comprehensive payout system
 - Insurance betting supported
+- Post-check surrender supported
 
 #### `Slots.java`
 - 3x3 slot machine grid

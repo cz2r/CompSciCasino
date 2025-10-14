@@ -5,8 +5,6 @@ import java.util.*;
  * Assistance from W3Schools, Stack Overflow
  */
 
-// TODO: Add surrender option (half bet returned, only on first two cards), test code for bugs, add more comments, code cleanup
-
 public class Blackjack {
 
     private static final Deck shoe = new Deck(); // Instantiate the shoe
@@ -20,7 +18,7 @@ public class Blackjack {
     private static boolean isShuffled = false; // Checks if the deck has been shuffled once
     private static int hands; // Create an integer to store the number of hands to be played
     private static final ArrayList<Integer> insuranceBet = new ArrayList<>(); // Create an arrayList for insurance bets on each hand
-    private static final ArrayList<Integer> surrenderList = new ArrayList<>(); // Create an arrayList for the surrendered hands
+    private static final ArrayList<Boolean> playerSurrender = new ArrayList<>(); // Create an arrayList to track if the player surrendered on each hand
 
     public static void game(){
         System.out.println("How many hands would you like to play? (Please input an integer thats less than or equal to 20)");
@@ -94,6 +92,13 @@ public class Blackjack {
 
         playerBust.clear(); // Initialize the playerBust and playerBlackjack states
         playerBlackjack.clear();
+        playerSurrender.clear();
+
+        for (ArrayList<Card> _ : playerHand) { // Initialize playerSurrender for each hand
+            playerSurrender.add(false);
+        }
+
+
         for (int i = 0; i < playerHand.size(); i++) {
             playerBust.add(false); // Adds playerBust and playerBlackjack for each hand
             playerBlackjack.add(false);
@@ -165,11 +170,19 @@ public class Blackjack {
     }
 
     private static void playHands() { // Logic for after the initial dealing
+
+        // Safety: ensure all lists are synced to playerHand size (should always be, but just in case)
+        while (playerSurrender.size() < playerHand.size()) playerSurrender.add(false);
+        while (playerBust.size() < playerHand.size()) playerBust.add(false);
+        while (playerBlackjack.size() < playerHand.size()) playerBlackjack.add(false);
+        while (bet.size() < playerHand.size()) bet.add(0);
+        while (insuranceBet.size() < playerHand.size()) insuranceBet.add(0);
+
         for (int i = 0; i < playerHand.size(); i++) {
 
             if (playerBlackjack.get(i)) { // Skip natural blackjack hands (They cannot be hit or split)
                 System.out.println("Hand " + (i + 1) + " hit a Blackjack! Skipping...");
-                continue; // Move to next hand (interates hand)
+                continue; // Move to next hand (iterates hand)
             }
             boolean playing = true; // Keeps track if the player can still play or not
             while (playing) { 
@@ -185,15 +198,15 @@ public class Blackjack {
                     break; // Stops the player from playing this hand
                 }
 
-                System.out.println("Choose action: (H)it, (S)tand, (D)ouble, S(P)lit (Case insensitive)"); // Lets the player choose what they want to do
+                System.out.println("Choose action: (H)it, (S)tand, (D)ouble, S(P)lit, Su(R)render (Case insensitive)"); // Lets the player choose what they want to do
                 
                 String choice = "";
                 while (true) { // input validation for player choice
                     choice = scanner.next().toLowerCase(); // Convert to lowercase to allow for case insensitive input
-                    if (choice.equals("h") || choice.equals("s") || choice.equals("d") || choice.equals("p")) {
+                    if (choice.equals("h") || choice.equals("s") || choice.equals("d") || choice.equals("p") || choice.equals("r")) {
                         break;
                     } else {
-                        System.out.println("Invalid choice. Please enter H, S, D, or P.");
+                        System.out.println("Invalid choice. Please enter H, S, D, P, or R.");
                     }
                 }
 
@@ -236,6 +249,7 @@ public class Blackjack {
                                 playerBlackjack.set(i, false); // Original hand cannot have blackjack after split
                                 playerBust.set(i, false); // original hand cannot be busted immediately after split
                                 insuranceBet.add(0); // No insurance on the new hand initially
+                                playerSurrender.add(false); // No surrender on the new hand initially
                                 bet.add(bet.get(i)); // Duplicate bet for the new hand
                                 System.out.println("You have split. You now have " + playerHand.size() + " hands.");
                                 System.out.println("Hand " + (i + 1) + " is now: " + hand);
@@ -247,6 +261,18 @@ public class Blackjack {
                             System.out.println("You can only split pairs of equal value.");
                         } // Refuse split if not possible, then returns back to the switch to allow user to pick another action
                     }
+
+                    case "r" -> { // Surrender
+                        if (playerHand.get(i).size() == 2) { // Only allowed on first two cards
+                            int refund = bet.get(i) / 2; // Calculate half the bet
+                            Currency.setMoney(Currency.getMoney() + refund); // Returns half the bet to the player
+                            System.out.println("You surrendered hand " + (i + 1) + ". You get back $" + refund + ".");
+                            playerSurrender.set(i, true); // Mark this hand as surrendered
+                            playing = false; // End this hand
+                        } else {
+                            System.out.println("You can only surrender on your first two cards."); // Refuse surrender if not possible, then returns back to the switch to allow user to pick another action
+                        }
+                    }
                 }
             }
         }
@@ -257,7 +283,7 @@ public class Blackjack {
         pause(500);
 
         System.out.println("Dealer's hand: " + dealerHand);
-        System.out.println(" -> Total: " + calculateHandValue(dealerHand));
+        System.out.println(" -> Total: " + calculateHandValue(dealerHand)); // Displays the dealers hand and value
         pause(500);
 
         while (true) { // Infinite loop until dealer busts or stands
@@ -291,15 +317,23 @@ public class Blackjack {
         System.out.println("\nRound Results");
         pause(500);
         if (dealerHasBlackjack) {
-            System.out.println("Dealer reveals: " + dealerHand + " -> Blackjack!");
+            System.out.println("Dealer reveals: " + dealerHand + " -> Blackjack!"); // Displays dealer hand if it has a natural blackjack
             pause(500);
         }
-        System.out.println("Dealer total: " + dealerTotal);
+        System.out.println("Dealer total: " + dealerTotal); // Displays the total of the dealer hand
         pause(500);
         
         handleInsurancePayouts(dealerHasBlackjack); // Handle insurance payouts first if taken
 
         for (int i = 0; i < playerHand.size(); i++) {
+
+            if (playerSurrender.get(i)) { // If the player surrendered on this hand; skip further checks and apply surrender loss
+                System.out.println("Hand " + (i + 1) + " was surrendered. You lose half your bet ($" + (bet.get(i) / 2) + ").");
+                totalWinnings -= (bet.get(i) / 2); // Track the loss from surrender
+                pause(500);
+                continue; // Move to next hand
+            }
+
             int playerTotal = calculateHandValue(playerHand.get(i)); // Calculates the value of the hands
             int handBet = bet.get(i); // Sets the bet that each hand has
             System.out.print("Hand " + (i + 1) + " (" + playerHand.get(i) + "): " + playerTotal + " -> "); // Prints the hand
@@ -323,7 +357,7 @@ public class Blackjack {
                 System.out.println("Blackjack! You win $" + (payout)); // Displays the payout (not including original bet - profit only)
                 totalWinnings += (payout);
                 pause(500);
-            } else if (dealerBust && surrenderList.get(i) == 0) { // If the dealer busted
+            } else if (dealerBust) { // If the dealer busted
                 Currency.setMoney(Currency.getMoney() + handBet * 2); // Returns double the bet (original bet + winnings)
                 System.out.println("Dealer busts! You win $" + handBet);
                 totalWinnings += handBet;
@@ -560,5 +594,6 @@ public class Blackjack {
         dealerHand.clear();
         dealerBust = false;
         insuranceBet.clear();
+        playerSurrender.clear();
     }
 }
