@@ -125,6 +125,7 @@ A Pokemon-themed slot machine with a 3x3 grid featuring classic Pokemon symbols 
 A high-stakes game of Russian Roulette with a twist - items and strategy add depth to the classic format.
 
 #### Game Mechanics
+- Ability to bet up to current balance
 - Both player and dealer start with 7 lives
 - Shotgun is loaded with 8 shells (3-8 live rounds, rest blanks)
 - Take turns shooting at opponent or yourself
@@ -133,7 +134,7 @@ A high-stakes game of Russian Roulette with a twist - items and strategy add dep
 - **Shooting yourself with live round**: Lose 1 life (2 with saw)
 
 #### Items
-Players receive random items throughout the game:
+Players receive 2 random items per turn:
 
 - **Magnifying Glass**: Reveals whether next shell is live or blank (once per turn)
 - **Cigarette**: Heals 1 life (can use multiple times)
@@ -155,6 +156,7 @@ The dealer uses strategic decision-making:
 - Dramatic pauses for tension
 - Smart AI opponent
 - Random shell distribution (3-8 live rounds per reload)
+- Pays out at 2:1 (doubles the bet)
 
 ---
 
@@ -173,7 +175,7 @@ All players begin with **$1000**
 ### Betting Limits
 - **Blackjack**: Bet any amount up to current balance per hand
 - **Slots**: Bet 1-3 coins per spin
-- **Buckshot Roulette**: No monetary betting (life-based gameplay)
+- **Buckshot Roulette**: Bet any amount up current balance
 
 ---
 
