@@ -85,6 +85,7 @@ public class App {
                 while (true) {
                     if (enteredStore){
                         playInput = 1;
+                        enteredStore = false;
                         break;
                     } else {     
                         System.out.println("Would you like to play again/play a different game? Please enter 1 for yes and 2 for no.");
