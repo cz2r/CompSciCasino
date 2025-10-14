@@ -110,7 +110,7 @@ public class Blackjack {
 
         for (int i = 0; i < hands; i++) {
             int handValue = calculateHandValue(playerHand.get(i)); // Calculates the value of the players hand
-            System.out.println("Player hand " + (i + 1) + ": " + playerHand.get(i));
+            System.out.println(Currency.getName() + " hand " + (i + 1) + ": " + playerHand.get(i));
             System.out.println(" -> Total: " + handValue); // Prints all the hands that the player has and their respective value
             pause(500); // Small pause for readability
         }
