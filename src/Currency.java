@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.*;
 
 public class Currency {
 
@@ -15,65 +15,150 @@ public class Currency {
     };
     private static final int[] prices = {1000, 2000, 3000, 5000, 10000, 100000, 1000000};
 
-    public static void setMoney(int m){ // Getter and setter for the money value
-        Currency.money = Math.abs(m); // Ensure that money is never negative
+    private static final List<String> ownedTitles = new ArrayList<>();
+    private static String equippedTitle = "";
+
+    // Money and player name
+    public static void setMoney(int m) {
+        Currency.money = Math.abs(m);
     }
 
-    public static int getMoney(){
-        return Math.abs(money); // Ensure that money is never negative
+    public static int getMoney() {
+        return Math.abs(money);
     }
 
-    public static void setName(String p){
+    public static void setName(String p) {
         Currency.playerName = p;
     }
-    
-    public static String getName(){
+
+    public static String getName() {
+        if (!equippedTitle.isEmpty()) { // If there is an equipped title then return the name and title
+            return playerName + equippedTitle;
+        }
         return playerName;
     }
 
+    // Game Store
 
-    public static void openStore(Scanner scanner){
-        System.out.println("\nWelcome to the Title Store!");
-        System.out.println("Available Titles:");
-            for (int i = 0; i < titles.length; i++) {
-                System.out.printf("%d. %s - $%d%n", i + 1, titles[i], prices[i]);
+    public static void openStore(Scanner scanner) { // Accept the scanner from app.java
+        while (true) {
+            System.out.println("\nWelcome to the Title Store!");
+            System.out.println("You currently have $" + money);
+            System.out.println("\nOptions:");
+            System.out.println("1. View & buy titles");
+            System.out.println("2. View owned titles / equip one");
+            System.out.println("3. Exit store");
+            System.out.print("Enter your choice: ");
+
+            if (!scanner.hasNextInt()) {
+                scanner.next();
+                System.out.println("Invalid input. Please enter a number (1-3).");
+                continue;
             }
-            System.out.println("0. Exit Store");
 
-            while (true) {
-                System.out.print("\nEnter the number of the title you want to buy: ");
+            int menuChoice = scanner.nextInt();
+            scanner.nextLine(); // consume the next line if invalid
 
-                if (!scanner.hasNextInt()) {
-                    scanner.next();
-                    System.out.println("Invalid input. Please enter a number.");
-                    continue;
+            switch (menuChoice) {
+                case 1 -> buyTitle(scanner);
+                case 2 -> manageTitles(scanner);
+                case 3 -> {
+                    System.out.println("Leaving store, returning to main menu.\n");
+                    return;
                 }
-
-                int choice = scanner.nextInt();
-                if (choice == 0) {
-                    System.out.println("Leaving store...");
-                    break;
-                }
-
-                if (choice < 1 || choice > titles.length) {
-                    System.out.println("Invalid choice. Try again.");
-                    continue;
-                }
-
-                int cost = prices[choice - 1];
-                String title = titles[choice - 1];
-
-                if (money >= cost) {
-                    money -= cost;
-                    playerName += title;
-                    System.out.printf("You bought%s for $%d!%nYour new name: %s%nBalance: $%d%n", title, cost, playerName, money);
-                    break;
-                } else {
-                    System.out.println("You can't afford that! Try something cheaper.");
-                }
+                default -> System.out.println("Invalid choice. Please enter 1, 2, or 3.");
             }
         }
     }
 
+    private static void buyTitle(Scanner scanner) { // If the player wants to buy a title
+        System.out.println("\nAvailable Titles");
+        for (int i = 0; i < titles.length; i++) {
+            String status = ownedTitles.contains(titles[i]) ? " (Owned)" : "";
+            System.out.printf("%d. %-20s $%d%s%n", i + 1, titles[i], prices[i], status);
+        }
+        System.out.println("0. Back to Store Menu");
 
+        while (true) {
+            System.out.print("\nEnter the number of the title you want to buy: ");
 
+            if (!scanner.hasNextInt()) {
+                scanner.next();
+                System.out.println("Invalid input. Please enter a number.");
+                continue;
+            }
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // clear newline
+
+            if (choice == 0) {
+                System.out.println("Returning to store menu...");
+                return;
+            }
+
+            if (choice < 1 || choice > titles.length) {
+                System.out.println("Invalid choice. Try again.");
+                continue;
+            }
+
+            int cost = prices[choice - 1];
+            String title = titles[choice - 1];
+
+            if (ownedTitles.contains(title)) {
+                System.out.println("You already own that title!");
+                continue;
+            }
+
+            if (money >= cost) {
+                money -= cost;
+                ownedTitles.add(title);
+                System.out.printf("You bought%s for $%d!%nRemaining balance: $%d%n", title, cost, money);
+            } else {
+                System.out.println("You can't afford that! Try something cheaper.");
+            }
+        }
+    }
+
+    private static void manageTitles(Scanner scanner) { // If the player wants to manage their titles
+        if (ownedTitles.isEmpty()) {
+            System.out.println("\nYou dont own any titles yet. Buy some first!");
+            return;
+        }
+
+        System.out.println("\nYour Titles");
+        for (int i = 0; i < ownedTitles.size(); i++) {
+            String title = ownedTitles.get(i);
+            String equippedMark = title.equals(equippedTitle) ? " (Equipped)" : "";
+            System.out.printf("%d. %s%s%n", i + 1, title, equippedMark);
+        }
+        System.out.println("0. Unequip current title / Back to Store");
+
+        while (true) {
+            System.out.print("\nEnter the number of the title to equip (select equipped title to exit without unequipping): ");
+
+            if (!scanner.hasNextInt()) {
+                scanner.next();
+                System.out.println("Invalid input. Please enter a number.");
+                continue;
+            }
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            if (choice == 0) {
+                equippedTitle = "";
+                System.out.println("Title unequipped. Your name is now " + playerName + ".");
+                return;
+            }
+
+            if (choice < 1 || choice > ownedTitles.size()) {
+                System.out.println("Invalid choice. Try again.");
+                continue;
+            }
+
+            equippedTitle = ownedTitles.get(choice - 1);
+            System.out.println("You are now known as: " + playerName + equippedTitle);
+            return;
+        }
+    }
+}
