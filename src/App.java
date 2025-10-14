@@ -17,6 +17,7 @@ public class App {
         boolean greetedBlackjack = false; // Checks if the greeting for the selected game has already been said
         boolean greetedSlots = false;
         boolean greetedRoulette = false;
+        boolean enteredStore = false;
         int selectedGame;
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.println("Welcome to Casino!");
@@ -28,76 +29,81 @@ public class App {
                     break;
                 }
             }
-            
+
             do {
-                while (true) { // Input validation
-                    System.out.println("Type 1 for Blackjack, 2 for Slots, and 3 for Buckshot Roulette.");
+
+                while (true) {
+                    System.out.println("Type 1 for Blackjack, 2 for Slots, 3 for Buckshot Roulette, or 4 to open the Title Store.");
                     System.out.println("You currently have " + Currency.getMoney() + " dollars available.");
+
                     if (scanner.hasNextInt()) {
                         selectedGame = scanner.nextInt();
-                        if (selectedGame >= 1 && selectedGame <= 3) {
-                            break; // Breaks if it is a valid input
+                        if (selectedGame >= 1 && selectedGame <= 4) {
+                            break; // If valid input then break the loop
                         } else {
-                            System.out.println("Invalid input! Please enter 1, 2, or 3."); // Catches if the integer is out of range
+                            System.out.println("Invalid input! Please enter 1, 2, 3 or 4"); // If invalid input request again
                         }
                     } else {
-                        System.out.println("Invalid input! Please enter a number (1, 2, or 3)."); // Catches if it is not an integer
-                        scanner.next(); // Ensures it doesn't get stuck on invalid input
+                        System.out.println("Invalid input! Please enter a number (1, 2, 3 or 4).");
+                        scanner.next(); // Consume the value so it doesnt crash on invalid input
                     }
                 }
+
                 switch (selectedGame) {
                     case 1 -> {
-                        if (!greetedBlackjack){
+                        if (!greetedBlackjack) {
                             System.out.println("Welcome to Blackjack!");
-                            System.out.println("Refer to the README for rules and features!"); // Only greets the first time they play blackjack
-                            greetedBlackjack = true;
+                            System.out.println("Refer to the README for rules and features!");
+                            greetedBlackjack = true; // Greet only if they havent played before
                         }
                         Blackjack.game();
                     }
                     case 2 -> {
-                        if (!greetedSlots){
+                        if (!greetedSlots) {
                             System.out.println("Welcome to Slots!");
-                            System.out.println("Refer to the README for rules and features!"); // Only greets the first time they play slots
+                            System.out.println("Refer to the README for rules and features!");
                             greetedSlots = true;
                         }
                         Slots.game();
                     }
                     case 3 -> {
-                        if (!greetedRoulette){
+                        if (!greetedRoulette) {
                             System.out.println("Welcome to Buckshot Roulette!");
-                            System.out.println("Refer to the README for rules and features!"); // Only greets the first time they play buckshot roulette
+                            System.out.println("Refer to the README for rules and features!");
                             greetedRoulette = true;
                         }
                         BuckshotRoulette.game();
                     }
-                    default -> {
-                        System.out.println("Invalid input! Please enter 1, 2, or 3."); // If the integer is not 1 2 or 3
+                    case 4 -> {
+                        Currency.openStore(scanner); // Pass the scanner in app.java to the store
+                        enteredStore = true;
                     }
-                    
+                    default -> System.out.println("Invalid input! Please enter 1, 2, or 3.");
                 }
-                
-                int playInput = 0; // Checks if the input is valid
+
+                int playInput = 0;
                 while (true) {
-                    System.out.println("Would you like to play again/play a different game? Please enter 1 for yes and 2 for no.");
-                    if (scanner.hasNextInt()) {
-                        playInput = scanner.nextInt();
-                        if (playInput == 1 || playInput == 2) { // If the input is valid (1 or 2)
-                            break;
+                    if (enteredStore){
+                        playInput = 1;
+                        break;
+                    } else {     
+                        System.out.println("Would you like to play again/play a different game? Please enter 1 for yes and 2 for no.");
+                        if (scanner.hasNextInt()) {
+                            playInput = scanner.nextInt();
+                            if (playInput == 1 || playInput == 2) {
+                                break; // Break the loop if valid input
+                            } else {
+                                System.out.println("Not a valid option. Please enter 1 or 2.");
+                            }
                         } else {
-                            System.out.println("Not a valid option. Please enter 1 or 2."); // Catches if the integer is out of range
+                            System.out.println("Invalid input! Please enter a number (1 or 2).");
+                            scanner.next(); // Consume invalid input
                         }
-                    } else {
-                        System.out.println("Invalid input! Please enter a number (1 or 2)."); // Catches if the input is not an integer
-                        scanner.next(); // Ensure it doesnt get stuck on invalid input
                     }
                 }
-                
                 playAgain = (playInput == 1);
-            } while (playAgain); // Runs the game selection again if they want to play again or play a different game
+
+            } while (playAgain);
         }
     }
 }
-
-
-
-
