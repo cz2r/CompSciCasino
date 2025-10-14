@@ -20,8 +20,8 @@ A Java-based casino gaming application featuring three classic games: Blackjack,
   - [Blackjack](#blackjack)
   - [Slots](#slots)
   - [Buckshot Roulette](#buckshot-roulette)
-  - [Title Store](#title-store)
 - [Currency System](#currency-system)
+  - [Title Store](#title-store)
 - [Technical Details](#technical-details)
 - [Project Structure](#project-structure)
 
