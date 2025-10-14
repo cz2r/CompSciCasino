@@ -20,6 +20,7 @@ A Java-based casino gaming application featuring three classic games: Blackjack,
   - [Blackjack](#blackjack)
   - [Slots](#slots)
   - [Buckshot Roulette](#buckshot-roulette)
+  - [Title Store](#title-store)
 - [Currency System](#currency-system)
 - [Technical Details](#technical-details)
 - [Project Structure](#project-structure)
@@ -157,6 +158,11 @@ The dealer uses strategic decision-making:
 - Smart AI opponent
 - Random shell distribution (3-8 live rounds per reload)
 - Pays out at 2:1 (doubles the bet)
+
+
+### Title Store
+ - Multiple titles for the user to buy
+ - Smart inventory management (allows user to equip titles)
 
 ---
 
