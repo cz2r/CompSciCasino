@@ -61,7 +61,7 @@ public class Blackjack {
                     }
                 } else {
                     System.out.println("Invalid input! Please enter a positive integer.");
-                    scanner.next(); // Ensure that it doesn't get stuck on invalid input
+                    scanner.next(); // Ensure that it doesnt get stuck on invalid input
                 }
             }
         }
@@ -110,14 +110,14 @@ public class Blackjack {
 
         for (int i = 0; i < hands; i++) {
             int handValue = calculateHandValue(playerHand.get(i)); // Calculates the value of the players hand
-            System.out.println(Currency.getName() + " hand " + (i + 1) + ": " + playerHand.get(i));
+            System.out.println(Currency.getName() + "'s hand " + (i + 1) + ": " + playerHand.get(i));
             System.out.println(" -> Total: " + handValue); // Prints all the hands that the player has and their respective value
             pause(500); // Small pause for readability
         }
 
         System.out.println("Dealer shows a " + dealerHand.get(0)); // Shows the dealers top card
         pause(500);
-        handleInsurance(); // Offer insurance if dealer's face-up card is an Ace
+        handleInsurance(); // Offer insurance if dealers face-up card is an Ace
         pause(500);
 
         System.out.println("Dealer peeks at their other card...");
@@ -179,7 +179,7 @@ public class Blackjack {
 
         for (int i = 0; i < playerHand.size(); i++) {
 
-            if (playerBlackjack.get(i)) { // Skip natural blackjack hands (They cannot be hit or split)
+            if (playerBlackjack.get(i)) { // Skip natural blackjack hands (they cannot be hit or split)
                 System.out.println("Hand " + (i + 1) + " hit a Blackjack! Skipping...");
                 continue; // Move to next hand (iterates hand)
             }
@@ -326,7 +326,7 @@ public class Blackjack {
 
         for (int i = 0; i < playerHand.size(); i++) {
 
-            if (playerSurrender.get(i)) { // If the player surrendered on this hand; skip further checks and apply surrender loss
+            if (playerSurrender.get(i)) { // If the player surrendered on this hand, skip further checks
                 System.out.println("Hand " + (i + 1) + " was surrendered. You lose half your bet ($" + (bet.get(i) / 2) + ").");
                 totalWinnings -= (bet.get(i) / 2); // Track the loss from surrender
                 pause(500);
@@ -394,7 +394,7 @@ public class Blackjack {
 
     private static void handleInsurance() {
         if (!dealerHand.get(0).getValue().equals("Ace")) {
-            return; // Only offer insurance if the dealer's face-up card is an Ace
+            return; // Only offer insurance if the dealers face-up card is an Ace
         } 
 
         System.out.println("Dealer's face-up card is an Ace. Would you like to take insurance? (Y/N)");
@@ -438,7 +438,7 @@ public class Blackjack {
                     System.out.println("Not enough money to take insurance for this hand.");
                     insuranceBet.add(0); // No insurance taken for this hand
                 } else {
-                    Currency.setMoney(Currency.getMoney() - insuranceCost); // Deduct insurance cost from player's money
+                    Currency.setMoney(Currency.getMoney() - insuranceCost); // Deduct insurance cost from players money
                     insuranceBet.add(insuranceCost); // Record the insurance bet
                     System.out.println("Insurance taken for hand " + (i + 1) + ". You paid $" + insuranceCost);
                 }
@@ -471,13 +471,13 @@ public class Blackjack {
 
     private static void handleInsurancePayouts(boolean dealerHasBlackjack) {
         if (insuranceBet.isEmpty()) {
-            return; // No insurance bets were placed, ignore the payout logic
+            return; // No insurance bets were placed, ignore the insurance payout logic
         }
 
         boolean hasInsurance = false;
         for (int amount : insuranceBet) {
             if (amount > 0) {
-                hasInsurance = true; // Check if any insurance was taken
+                hasInsurance = true; // Check if any insurance was taken (with value)
                 break;
             }
         }

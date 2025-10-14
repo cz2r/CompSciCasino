@@ -2,8 +2,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 
-// TODO: Add more symbols and payout combinations, fix the money counting (use currency class), fix format, add better comments, add more features (like bonus rounds, progressive jackpots, etc.)
-
 public class Slots {
 
     // slot symbols
