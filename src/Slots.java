@@ -3,8 +3,8 @@ import java.util.Scanner;
 
 public class Slots {
 
-    // slot symbols
-    private static final String[] SyMbOlS = {"7", "@", "#", "$", "%", "T", "J", "C", "E", "K", "L"}; //symbols, because looking at the words was an eyesore
+    // slot Symbols
+    private static final String[] Symbols = {"7", "@", "#", "$", "%", "T", "J", "C", "E", "K", "L"}; //Symbols, because looking at the words was an eyesore
     private static final Random random = new Random(); // randomsigs it 
 
     public static void game() {
@@ -57,12 +57,12 @@ public class Slots {
         } // starting money
     }
 
-    // spins reels (3x3 grid, random symbols)
+    // spins reels (3x3 grid, random Symbols)
     private static String[][] spinReels() {
         String[][] reels = new String[3][3]; //this randomizes it 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
-                reels[row][col] = SyMbOlS[random.nextInt(SyMbOlS.length)]; // this one as well
+                reels[row][col] = Symbols[random.nextInt(Symbols.length)]; // this one as well
             }
         }
         return reels;
