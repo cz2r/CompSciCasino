@@ -72,7 +72,8 @@ public class App {
                             System.out.println("Refer to the README for rules and features!");
                             greetedRoulette = true;
                         }
-                        BuckshotRoulette.game();
+                        BuckshotRoulette buckshotRoulette = new BuckshotRoulette();
+                        buckshotRoulette.startGame();
                     }
                     case 4 -> {
                         Currency.openStore(scanner); // Pass the scanner in app.java to the store

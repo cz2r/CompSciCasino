@@ -4,415 +4,171 @@ public class BuckshotRoulette {
     static Random rand = new Random();
     static Scanner sc = new Scanner(System.in);
 
-    static String playerName;
-    static int playerLives = 7;
-    static int dealerLives = 7;
+    // Player state
+    String playerName;
+    int playerLives = 7;
+    int dealerLives = 7;
     static final int MAX_LIVES = 7;
     static final int MAX_ITEMS = 8;
-    static Map<String, Integer> playerItems = new HashMap<>();
-    static Map<String, Integer> dealerItems = new HashMap<>();
-    // Global static maps to store dealer and player information
+    Map<String, Integer> playerItems = new HashMap<>();
+    Map<String, Integer> dealerItems = new HashMap<>();
 
-    static final int TOTAL_SHELLS = 8; // changed to 8 shells
-    static LinkedList<Boolean> chamber = new LinkedList<>();
+    // Game state
+    static final int TOTAL_SHELLS = 8;
+    LinkedList<Boolean> chamber = new LinkedList<>();
+    boolean sawUsedPlayer = false;
+    boolean sawUsedDealer = false;
+    boolean playerGlassUsedTsTurn = false;
+    boolean playerSawUsedTsTurn = false;
+    boolean dealerGlassUsedTsTurn = false;
+    boolean dealerSawUsedTsTurn = false;
 
-    // persistent "next-shot double" flags
-    static boolean sawActivePlayer = false;
-    static boolean sawActiveDealer = false;
+    public static void main(String[] args) {
+        BuckshotRoulette game = new BuckshotRoulette();
+        game.startGame();
+    }
 
-    // per-turn usage-block flags (prevents re-using Glass or Saw in same turn)
-    static boolean playerGlassUsedThisTurn = false;
-    static boolean playerSawUsedThisTurn = false;
-    static boolean dealerGlassUsedThisTurn = false;
-    static boolean dealerSawUsedThisTurn = false;
-
-    public static void game() {
+    public void startGame() {
         playerName = Currency.getName();
-        resetGame();
 
-        System.out.println("\n=== Buckshot Roulette ===\n");
+        setupGun();
 
         boolean playerTurn = true;
-
         while (playerLives > 0 && dealerLives > 0) {
+            if (chamber.isEmpty()) setupGun();
+            perTurnUsageReset();
+            randomItem(playerItems);
+            randomItem(dealerItems);
+            showStatus();
 
-            // If chamber empty, reload (and display live/blank counts only on reload)
-            if (chamber.isEmpty()) {
-                pause("--- Chamber empty. Reloading in any order... ---", 1500);
-                setupGun();
-            }
-
-            // Reset per-turn usage flags at start of each turn
-            resetPerTurnUsageFlags();
-
-            // Give one random item each round (if under max of 8)
-            assignRandomItem(playerItems);
-            assignRandomItem(dealerItems);
-
-            showStatus(); //shows lives and items of both dealer and player
-
-            if (playerTurn) {
+            if (playerTurn)
                 playerTurn = playerAction();
-            } else {
+            else
                 playerTurn = !dealerAction();
-            }
         }
-
-        pause("\n=== Game Over ===", 1500);
-        if (playerLives <= 0 && dealerLives <= 0) {
-            System.out.println("It's a draw!");
-        } else if (playerLives <= 0) {
-            System.out.println("Dealer wins!");
-        } else {
-            System.out.println(playerName + " wins!");
-        }
+        System.out.println("\n=== Game Over ===");
+        System.out.println(playerLives > 0 ? playerName + " wins!" : "Dealer wins!");
     }
 
-    static void resetGame() {
-        playerLives = MAX_LIVES;
-        dealerLives = MAX_LIVES;
-        playerItems.clear();
-        dealerItems.clear();
-        sawActivePlayer = false;
-        sawActiveDealer = false;
-        setupGun();
-    }
-
-    // Randomise live blanks with at least 3 live rounds. Print counts only on reload.
-    static void setupGun() {
+    void setupGun() {
         chamber.clear();
-        // random live between 3 and 8 inclusive (ensures at least 3 live)
-        int liveShells = rand.nextInt(4) + 3; // 0..5 + 3 => 3..8
+        int liveShells = rand.nextInt(4) + 3; // 3–7 lives
         int blankShells = TOTAL_SHELLS - liveShells;
-
         for (int i = 0; i < liveShells; i++) chamber.add(true);
         for (int i = 0; i < blankShells; i++) chamber.add(false);
-
         Collections.shuffle(chamber);
-
-        System.out.println("================================================================");
-        System.out.println("Shotgun reloaded: " + liveShells + " live, " + blankShells + " blank.");
+        System.out.println("\nShotgun reloaded: " + liveShells + " live, " + blankShells + " blank.");
+        pause("", 500);
     }
 
-    // Assign exactly one random item to the given inventory if under MAX_ITEMS
-    static void assignRandomItem(Map<String, Integer> items) {
+    void showStatus() {
+        System.out.println("\n----------------------------");
+        System.out.printf("%-12s | %s (%d/%d)\n", playerName, "+".repeat(playerLives), playerLives, MAX_LIVES);
+        System.out.printf("%-12s | %s (%d/%d)\n", "Dealer", "+".repeat(dealerLives), dealerLives, MAX_LIVES);
+        System.out.println("----------------------------");
+        System.out.printf("%-12s | %s\n", playerName, playerItems);
+        System.out.printf("%-12s | %s\n", "Dealer", dealerItems);
+        System.out.println("----------------------------");
+    }
+
+    void perTurnUsageReset() {
+        playerGlassUsedTsTurn = false;
+        playerSawUsedTsTurn = false;
+        dealerGlassUsedTsTurn = false;
+        dealerSawUsedTsTurn = false;
+    }
+
+    void randomItem(Map<String, Integer> items) {
         if (items.values().stream().mapToInt(Integer::intValue).sum() >= MAX_ITEMS) return;
         String[] pool = {"Glass", "Cig", "Saw"};
         String item = pool[rand.nextInt(pool.length)];
         items.put(item, items.getOrDefault(item, 0) + 1);
     }
 
-    // Show status with '+' repeated for lives
-    static void showStatus() {
-    int maxLen = MAX_LIVES;
-
-    String playerHearts = "+".repeat(playerLives);
-    String dealerHearts = "+".repeat(dealerLives);
-
-    String playerPadding = " ".repeat(maxLen - playerLives);
-    String dealerPadding = " ".repeat(maxLen - dealerLives);
-
-    System.out.println("Lives:");
-    System.out.println("\n------------------------------");
-    System.out.printf("%-12s | %s%s (%d/%d)\n", playerName, playerHearts, playerPadding, playerLives, MAX_LIVES);
-    System.out.printf("%-12s | %s%s (%d/%d)\n", "Dealer", dealerHearts, dealerPadding, dealerLives, MAX_LIVES);
-    System.out.println("------------------------------");
-
-    System.out.println("Items:");
-    System.out.printf("%-12s | %s\n", playerName, playerItems.isEmpty() ? "None" : playerItems);
-    System.out.printf("%-12s | %s\n", "Dealer", dealerItems.isEmpty() ? "None" : dealerItems);
-    System.out.println("------------------------------");
-    System.out.println("Chamber shells left: " + chamber.size());
-    System.out.println();
-}
-
-
-    // Reset per-turn flags so Glass/Saw can be used again next turn
-    static void resetPerTurnUsageFlags() {
-        playerGlassUsedThisTurn = false;
-        playerSawUsedThisTurn = false;
-        dealerGlassUsedThisTurn = false;
-        dealerSawUsedThisTurn = false;
-    }
-
-    // Player turn; returns true if player gets an extra turn (shoot self blank), false otherwise
-    static boolean playerAction() {
+    boolean playerAction() {
         System.out.println("\nYour turn, " + playerName + "!");
-        boolean extraTurn = false;
-        boolean turnEnded = false;
-
-        while (!turnEnded) {
-            // Allow the player to use items first — can use multiple items,
-            // but Glass and Saw cannot be used more than once each in the same turn.
-            if (!playerItems.isEmpty()) {
-                System.out.println("Do you want to use an item? (y/n)");
-                String input = getYesNo();
-                if (input.equals("y")) {
-                    // Present only items that exist AND are allowed this turn
-                    List<String> allowed = getAllowedItemsForPlayer();
-                    if (allowed.isEmpty()) {
-                        System.out.println("No usable items available this turn (Glass/Saw already used). You can still use Cigarettes.");
-                    } else {
-                        String chosen = pickItemFlexible(allowed);
-                        useItem(chosen, playerItems, true);
-                        showStatus();
-                        pause("", 900);
-                        continue; // allow further item usage or decision to fire
-                    }
-                }
-            }
-
-            // Fire choice
-            System.out.println("Choose target: 1 = Dealer, 2 = Yourself");
-            int targetChoice = getInt(1, 2);
-
-            if (targetChoice == 1) {
-                System.out.println("You aim at the dealer...");
-                extraTurn = fire("dealer", playerName, sawActivePlayer);
-                // saw effect consumes only on actual shot (we reset regardless)
-                sawActivePlayer = false;
-            } else {
-                System.out.println("You aim at yourself...");
-                extraTurn = fire("player", playerName, sawActivePlayer);
-                sawActivePlayer = false;
-            }
-            // firing ends the player's decision loop; extraTurn decides if player keeps turn
-            turnEnded = true;
+        System.out.println("Use item? (y/n)");
+        String input = sc.nextLine().toLowerCase();
+        if (input.equals("y") && !playerItems.isEmpty()) {
+            String item = inputControl(playerItems);
+            Items.useItem(item, playerItems, true, this);
         }
+
+        System.out.println("Shoot 1 = Dealer, 2 = Yourself");
+        int target = Integer.parseInt(sc.nextLine());
+        boolean extraTurn = fire(target == 1 ? "dealer" : "player", playerName, sawUsedPlayer);
+        sawUsedPlayer = false;
         return extraTurn;
     }
 
-    // Build a list of allowed items for the player to select (accounts for per-turn usage blocks)
-    static List<String> getAllowedItemsForPlayer() {
-        List<String> allowed = new ArrayList<>();
-        for (String k : playerItems.keySet()) {
-            switch (k) {
-                case "Cig" -> {
-                    // Cig allowed always if present
-                    if (playerItems.get(k) > 0) allowed.add(k);
-                }
-                case "Glass" -> {
-                    if (playerItems.get(k) > 0 && !playerGlassUsedThisTurn) allowed.add(k);
-                }
-                case "Saw" -> {
-                    if (playerItems.get(k) > 0 && !playerSawUsedThisTurn) allowed.add(k);
-                }
-                default -> {
-                }
-            }
-        }
-        return allowed;
-    }
+    boolean dealerAction() {
+        System.out.println("\nDealer’s turn...");
+        boolean nextShellLive = chamber.peek();
+        boolean usedGlass;
 
-    // Dealer turn: smarter decisions; returns true if dealer gets an extra turn
-    static boolean dealerAction() {
-        System.out.println("\nDealer's turn...");
-        boolean extraTurn;
+        if (dealerItems.containsKey("Glass")) {
+            System.out.println("Dealer peers through the magnifying glass... \"Interesting...\"");
+            usedGlass = true;
+            boolean glassSawRound = chamber.peek();
 
-        // Dealer checks next shell chance (but doesn't reveal it unless uses Glass)
-        boolean nextShellLive = chamber.peek() != null && chamber.peek();
-
-        // Dealer evaluates items and uses at most one item per turn (and respects per-turn usage rules)
-        if (!dealerItems.isEmpty()) {
-            // If dealer is injured, prefer Cig
-            if (dealerItems.containsKey("Cig") && dealerLives < MAX_LIVES) {
-                // use cigarette
-                useItem("Cig", dealerItems, false);
-                pause("", 900);
+            // If live - attach saw and shoot player
+            if (glassSawRound) {
+                if (dealerItems.containsKey("Saw") && !dealerSawUsedTsTurn)
+                    Items.useItem("Saw", dealerItems, false, this);
+                System.out.println("Dealer aims at you...");
+                return fire("player", "Dealer", sawUsedDealer);
             } else {
-                // If next shell likely live, try to use saw (if not used this turn) to increase damage
-                if (nextShellLive && dealerItems.containsKey("Saw") && !dealerSawUsedThisTurn) {
-                    useItem("Saw", dealerItems, false);
-                    pause("", 900);
-                } else if (dealerItems.containsKey("Glass") && !dealerGlassUsedThisTurn) {
-                    // If dealer has glass and will benefit, use it
-                    useItem("Glass", dealerItems, false);
-                    pause("", 900);
-                }
+                // Blank - shoot self
+                System.out.println("Dealer aims at himself...");
+                return fire("dealer", "Dealer", sawUsedDealer);
             }
         }
 
-        // Dealer decision: if next shell is live, favor shooting the player; if blank is likely,
-        // sometimes risk shooting himself for an extra turn (but avoid saw+self)
-        boolean shootSelf = false;
-        // If dealer used saw this turn, avoid shooting self
-        if (sawActiveDealer) {
-            shootSelf = false;
-        } else {
-            double liveRatio = (double) chamber.stream().filter(b -> b).count() / chamber.size();
-            // If probability of live is low, sometimes choose self to gain extra turn
-            if (liveRatio < 0.5) {
-                // 60% chance to risk self-shot if blanks are more likely
-                shootSelf = rand.nextInt(100) < 80;
-            }
-        }
-
-        if (shootSelf) {
-            System.out.println("Dealer aims at himself...");
-            extraTurn = fire("dealer", "Dealer", sawActiveDealer);
-            sawActiveDealer = false;
-        } else {
+        // Default random logic if no glass
+        if (nextShellLive) {
             System.out.println("Dealer aims at you...");
-            extraTurn = fire("player", "Dealer", sawActiveDealer);
-            sawActiveDealer = false;
-        }
-        return extraTurn;
-    }
-
-    // Unified item use: returns true if applied successfully
-    // If isPlayer==true, actor is player; else dealer
-    static boolean useItem(String item, Map<String, Integer> inventory, boolean isPlayer) {
-        String actor = isPlayer ? playerName : "Dealer";
-
-        // Validate presence
-        if (!inventory.containsKey(item) || inventory.get(item) <= 0) {
-            System.out.println(actor + " does not have that item.");
-            return false;
-        }
-
-        // Block repeated usage of Glass/Saw in same turn (Cigarette allowed multiple times)
-        if (item.equals("Glass")) {
-            if (isPlayer && playerGlassUsedThisTurn) {
-                System.out.println("You have already used a magnifying glass this turn.");
-                return false;
-            }
-            if (!isPlayer && dealerGlassUsedThisTurn) {
-                System.out.println("Dealer has already used a magnifying glass this turn.");
-                return false;
-            }
-        }
-        if (item.equals("Saw")) {
-            if (isPlayer && playerSawUsedThisTurn) {
-                System.out.println("You have already used a saw this turn.");
-                return false;
-            }
-            if (!isPlayer && dealerSawUsedThisTurn) {
-                System.out.println("Dealer has already used a saw this turn.");
-                return false;
-            }
-        }
-
-        // Consume item from inventory (for Cigarettes, we still consume but allow further uses)
-        inventory.put(item, inventory.get(item) - 1);
-        if (inventory.get(item) == 0) inventory.remove(item);
-
-        switch (item) {
-            case "Cig" -> {
-                if (isPlayer) {
-                    if (playerLives < MAX_LIVES) {
-                        playerLives++;
-                        System.out.println(playerName + " smokes a cigarette and heals 1 life.");
-                    } else {
-                        System.out.println(playerName + " is at full health; cigarette wasted.");
-                    }
-                } else {
-                    if (dealerLives < MAX_LIVES) {
-                        dealerLives++;
-                        System.out.println("Dealer smokes a cigarette and heals 1 life.");
-                    } else {
-                        System.out.println("Dealer is at full health; cigarette wasted.");
-                    }
-                }
-                // Cigarettes do not set per-turn block
-                return true;
-            }
-            case "Glass" -> {
-                // reveal next shell
-                boolean next = chamber.peek() != null && chamber.peek();
-                System.out.println(actor + " uses a magnifying glass. The next shell is " + (next ? "LIVE." : "BLANK."));
-                if (isPlayer) playerGlassUsedThisTurn = true;
-                else dealerGlassUsedThisTurn = true;
-                return true;
-            }
-            case "Saw" -> {
-                if (isPlayer) {
-                    sawActivePlayer = true;
-                    playerSawUsedThisTurn = true;
-                    System.out.println("You attach a saw. The next live shot you fire will deal DOUBLE damage.");
-                } else {
-                    sawActiveDealer = true;
-                    dealerSawUsedThisTurn = true;
-                    System.out.println("Dealer attaches a saw. The next live shot dealer fires will deal DOUBLE damage.");
-                }
-                return true;
-            }
-            default -> {
-                System.out.println("Unknown item.");
-                return false;
-            }
+            return fire("player", "Dealer", sawUsedDealer);
+        } else {
+            System.out.println("Dealer aims at himself...");
+            return fire("dealer", "Dealer", sawUsedDealer);
         }
     }
 
-    // uses nextLine() to consume user input robustly
-    static String pickItemFlexible(List<String> available) {
-        System.out.println("Pick an item: " + available + " (case-insensitive)");
-        while (true) {
-            String input = sc.nextLine().trim().toLowerCase();
-            for (String item : available) {
-                if (input.equals(item.toLowerCase()) || input.equals(item.substring(0, 1).toLowerCase())) {
-                    return item;
-                }
-            }
-            System.out.println("Invalid choice. Try again.");
-        }
-    }
-
-    // fire: returns true if shooter gets extra turn (self-blank), false otherwise
-    static boolean fire(String target, String shooter, boolean doubled) {
-
+    boolean fire(String target, String shooter, boolean doubled) {
         boolean shell = chamber.poll();
-
-        // pauses for dramatic effect
-        pause("", 1300);
-
+        pause("", 1000);
         if (shell) {
-            int damage = doubled ? 2 : 1;
+            int dmg = doubled ? 2 : 1;
             if (target.equals("player")) {
-                playerLives -= damage;
-                System.out.println("BANG! You lost " + damage + (damage == 1 ? " life." : " lives."));
+                playerLives -= dmg;
+                System.out.println("BANG! You lost " + dmg + " life" + (dmg > 1 ? "s!" : "!"));
             } else {
-                dealerLives -= damage;
-                System.out.println("BANG! Dealer lost " + damage + (damage == 1 ? " life." : " lives."));
+                dealerLives -= dmg;
+                System.out.println("BANG! Dealer lost " + dmg + " life" + (dmg > 1 ? "s!" : "!"));
             }
-            pause("Turn ends.", 1200);
-            return false; // hit ends the turn
+            pause("Turn ends.", 1000);
+            return false;
         } else {
             System.out.println("Click... blank round.");
-            // If shooter shot themself and it was blank, they gain extra turn
             if ((target.equals("player") && shooter.equals(playerName)) ||
                 (target.equals("dealer") && shooter.equals("Dealer"))) {
-                System.out.println((shooter.equals(playerName) ? "You" : "Dealer") + " gain an extra turn.");
-                pause("", 1200);
+                System.out.println(shooter + " gains an extra turn.");
                 return true;
             }
-            pause("Turn ends.", 1200);
+            pause("Turn ends.", 1000);
             return false;
         }
     }
 
-    // get y/n validated input (consumes the rest of line)
-    static String getYesNo() {
-        while (true) {
-            String input = sc.nextLine().trim().toLowerCase();
-            if (input.equals("y") || input.equals("n")) return input;
-            System.out.println("Please enter 'y' or 'n'.");
-        }
+    String inputControl(Map<String, Integer> items) {
+        System.out.println("Available: " + items.keySet());
+        String item = sc.nextLine().trim();
+        return items.keySet().stream()
+                .filter(k -> k.equalsIgnoreCase(item) || k.toLowerCase().startsWith(item.toLowerCase()))
+                .findFirst().orElse("Cig");
     }
 
-    // getInt validated input (consumes newline)
-    static int getInt(int min, int max) {
-        while (true) {
-            String line = sc.nextLine().trim();
-            try {
-                int val = Integer.parseInt(line);
-                if (val >= min && val <= max) return val;
-            } catch (NumberFormatException ignored) {
-            }
-            System.out.println("Enter a valid option (" + min + "-" + max + ").");
-        }
-    }
-
-    static void pause(String msg, int ms) {
+    void pause(String msg, int ms) {
         try {
             if (!msg.isEmpty()) System.out.println(msg);
             Thread.sleep(ms);
@@ -420,5 +176,4 @@ public class BuckshotRoulette {
             Thread.currentThread().interrupt();
         }
     }
-
 }
