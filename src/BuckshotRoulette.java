@@ -23,11 +23,6 @@ public class BuckshotRoulette {
     boolean dealerGlassUsedTsTurn = false;
     boolean dealerSawUsedTsTurn = false;
 
-    public static void main(String[] args) {
-        BuckshotRoulette game = new BuckshotRoulette();
-        game.startGame();
-    }
-
     public void startGame() {
         playerName = Currency.getName();
 
@@ -104,11 +99,9 @@ public class BuckshotRoulette {
     boolean dealerAction() {
         System.out.println("\nDealer’s turn...");
         boolean nextShellLive = chamber.peek();
-        boolean usedGlass;
 
         if (dealerItems.containsKey("Glass")) {
             System.out.println("Dealer peers through the magnifying glass... \"Interesting...\"");
-            usedGlass = true;
             boolean glassSawRound = chamber.peek();
 
             // If live - attach saw and shoot player
