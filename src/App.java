@@ -33,18 +33,18 @@ public class App {
             do {
 
                 while (true) {
-                    System.out.println("Type 1 for Blackjack, 2 for Slots, 3 for Buckshot Roulette, or 4 to open the Title Store.");
+                    System.out.println("Type 1 for Blackjack, 2 for Slots, 3 for Buckshot Roulette, or 4 to open the Title Store. Type 5 to reset your money to 1000.");
                     System.out.println("You currently have " + Currency.getMoney() + " dollars available.");
 
                     if (scanner.hasNextInt()) {
                         selectedGame = scanner.nextInt();
-                        if (selectedGame >= 1 && selectedGame <= 4) {
+                        if (selectedGame >= 1 && selectedGame <= 5) {
                             break; // If valid input then break the loop
                         } else {
-                            System.out.println("Invalid input! Please enter 1, 2, 3 or 4"); // If invalid input request again
+                            System.out.println("Invalid input! Please enter 1, 2, 3, 4 or 5"); // If invalid input request again
                         }
                     } else {
-                        System.out.println("Invalid input! Please enter a number (1, 2, 3 or 4).");
+                        System.out.println("Invalid input! Please enter a number (1, 2, 3, 4 or 5).");
                         scanner.next(); // Consume the value so it doesnt crash on invalid input
                     }
                 }
@@ -78,7 +78,8 @@ public class App {
                         Currency.openStore(scanner); // Pass the scanner in app.java to the store
                         enteredStore = true;
                     }
-                    default -> System.out.println("Invalid input! Please enter 1, 2, or 3.");
+                    case 5 -> Currency.resetMoney();
+                    default -> System.out.println("Invalid input! Please enter 1, 2, 3, 4 or 5");
                 }
 
                 int playInput = 0;

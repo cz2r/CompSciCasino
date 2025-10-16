@@ -5,6 +5,7 @@ public class Currency {
     private static int money = 1000; // Original amount of money
     private static String playerName;
     private static final String[] titles = { // Store titles + prices
+        " the Brokey",
         " the Ace", 
         " the Jester", 
         " the All Knowing",  
@@ -13,7 +14,7 @@ public class Currency {
         " the Royal Flush",
         " the Bum"
     };
-    private static final int[] prices = {1000, 2000, 3000, 5000, 10000, 100000, 1000000};
+    private static final int[] prices = {0, 1000, 2000, 3000, 5000, 10000, 100000, 1000000};
 
     private static final List<String> ownedTitles = new ArrayList<>();
     private static String equippedTitle = "";
@@ -160,5 +161,10 @@ public class Currency {
             System.out.println("You are now known as: " + playerName + equippedTitle);
             return;
         }
+    }
+
+    public static void resetMoney(){
+        Currency.setMoney(1000);
+        System.out.println("Money set to $1000");
     }
 }
