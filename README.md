@@ -20,8 +20,8 @@ A Java-based casino gaming application featuring three classic games: Blackjack,
   - [Blackjack](#blackjack)
   - [Slots](#slots)
   - [Buckshot Roulette](#buckshot-roulette)
-  - [Title Store](#title-store)
 - [Currency System](#currency-system)
+  - [Title Store](#title-store)
 - [Technical Details](#technical-details)
 - [Project Structure](#project-structure)
 
@@ -94,6 +94,7 @@ A classic card game where players compete against the dealer to get as close to 
 - Comprehensive input validation
 - Inform user on total winnings and losses
 - Allows for user to bet insurance if the dealer shows an Ace
+- Allows user to surrender if they believe their hand is bad
 
 ---
 
@@ -159,11 +160,6 @@ The dealer uses strategic decision-making:
 - Random shell distribution (3-8 live rounds per reload)
 - Pays out at 2:1 (doubles the bet)
 
-
-### Title Store
- - Multiple titles for the user to buy
- - Smart inventory management (allows user to equip titles)
-
 ---
 
 ## Currency System
@@ -182,6 +178,10 @@ All players begin with **$1000**
 - **Blackjack**: Bet any amount up to current balance per hand
 - **Slots**: Bet 1-3 coins per spin
 - **Buckshot Roulette**: Bet any amount up current balance
+
+### Title Store
+ - Multiple titles for the user to buy
+ - Smart inventory management (allows user to equip titles)
 
 ---
 
@@ -221,6 +221,7 @@ All players begin with **$1000**
 - Static currency management
 - Getter and setter methods for money and player name
 - Shared across all game modules
+- Contains the title store
 
 #### `Deck.java`
 - Professional 8-deck shoe implementation
@@ -248,11 +249,11 @@ All games include comprehensive input validation:
 
 ```
 src/
-├── App.java                    # Main application and menu
+├── App.java                   # Main application and menu
 ├── Blackjack.java             # Blackjack game logic
 ├── Slots.java                 # Slots game logic
 ├── BuckshotRoulette.java      # Buckshot Roulette game logic
-├── Currency.java              # Shared currency system
+├── Currency.java              # Shared currency, name, and store system
 └── Deck.java                  # Card deck and Card classes
 ```
 

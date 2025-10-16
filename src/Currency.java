@@ -16,8 +16,8 @@ public class Currency {
     };
     private static final int[] prices = {0, 1000, 2000, 3000, 5000, 10000, 100000, 1000000};
 
-    private static final List<String> ownedTitles = new ArrayList<>();
-    private static String equippedTitle = "";
+    private static final List<String> ownedTitles = new ArrayList<>(); // Titles that the player owns
+    private static String equippedTitle = ""; // Title that the player has equipped
 
     // Money and player name
     public static void setMoney(int m) {
@@ -39,17 +39,17 @@ public class Currency {
         return playerName;
     }
 
-    // Game Store
+    // The title store
 
     public static void openStore(Scanner scanner) { // Accept the scanner from app.java
         while (true) {
             System.out.println("\nWelcome to the Title Store!");
             System.out.println("You currently have $" + money);
-            System.out.println("\nOptions:");
+            System.out.println("Options:");
             System.out.println("1. View & buy titles");
             System.out.println("2. View owned titles / equip one");
             System.out.println("3. Exit store");
-            System.out.print("Enter your choice: ");
+            System.out.println("Enter your choice: ");
 
             if (!scanner.hasNextInt()) {
                 scanner.next();
@@ -75,8 +75,8 @@ public class Currency {
     private static void buyTitle(Scanner scanner) { // If the player wants to buy a title
         System.out.println("\nAvailable Titles");
         for (int i = 0; i < titles.length; i++) {
-            String status = ownedTitles.contains(titles[i]) ? " (Owned)" : "";
-            System.out.printf("%d. %-20s $%d%s%n", i + 1, titles[i], prices[i], status);
+            String status = ownedTitles.contains(titles[i]) ? " (Owned)" : ""; // Ternary operator to check if the title is owned 
+            System.out.printf("%d. %-20s $%d%s%n", i + 1, titles[i], prices[i], status); // Format the output nicely (-20s for left align)
         }
         System.out.println("0. Back to Store Menu");
 
@@ -93,11 +93,11 @@ public class Currency {
             scanner.nextLine(); // clear newline
 
             if (choice == 0) {
-                System.out.println("Returning to store menu...");
+                System.out.println("Returning to store menu");
                 return;
             }
 
-            if (choice < 1 || choice > titles.length) {
+            if (choice < 1 || choice > titles.length) { 
                 System.out.println("Invalid choice. Try again.");
                 continue;
             }
@@ -113,16 +113,16 @@ public class Currency {
             if (money >= cost) {
                 money -= cost;
                 ownedTitles.add(title);
-                System.out.printf("You bought%s for $%d!%nRemaining balance: $%d%n", title, cost, money);
+                System.out.printf("You bought%s for $%d!%nRemaining balance: $%d%n", title, cost, money); // Formatted output for better readability
             } else {
-                System.out.println("You can't afford that! Try something cheaper.");
+                System.out.println("You dont have enough money to buy that title.");
             }
         }
     }
 
     private static void manageTitles(Scanner scanner) { // If the player wants to manage their titles
         if (ownedTitles.isEmpty()) {
-            System.out.println("\nYou dont own any titles yet. Buy some first!");
+            System.out.println("\nYou dont own any titles yet. Buy some from the store first!");
             return;
         }
 
@@ -130,7 +130,7 @@ public class Currency {
         for (int i = 0; i < ownedTitles.size(); i++) {
             String title = ownedTitles.get(i);
             String equippedMark = title.equals(equippedTitle) ? " (Equipped)" : "";
-            System.out.printf("%d. %s%s%n", i + 1, title, equippedMark);
+            System.out.printf("%d. %s%s%n", i + 1, title, equippedMark); // Format the output nicely
         }
         System.out.println("0. Unequip current title / Back to Store");
 

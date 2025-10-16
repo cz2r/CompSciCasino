@@ -86,7 +86,7 @@ public class App {
                 while (true) {
                     if (enteredStore){
                         playInput = 1;
-                        enteredStore = false;
+                        enteredStore = false; // Reset entered store (so it only auto plays if the store was entered)
                         break;
                     } else {     
                         System.out.println("Would you like to play again/play a different game? Please enter 1 for yes and 2 for no.");
@@ -103,8 +103,7 @@ public class App {
                         }
                     }
                 }
-                playAgain = (playInput == 1);
-
+                playAgain = (playInput == 1); // If the user wants to play again
             } while (playAgain);
         }
     }
