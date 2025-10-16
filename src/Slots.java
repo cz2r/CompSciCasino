@@ -1,34 +1,33 @@
 import java.util.Random;
 import java.util.Scanner;
 
-
 public class Slots {
 
     // slot symbols
-    private static final String[] SyMbOlS = {"7", "Pikachu", "Rattata", "Bellsprout", "Pokeball"}; //zhe symbols from the og pokemon red game
+    private static final String[] SyMbOlS = {"7", "@", "#", "$", "%", "T", "J", "C", "E", "K", "L"}; //symbols, because looking at the words was an eyesore
     private static final Random random = new Random(); // randomsigs it 
 
     public static void game() {
         try (Scanner scanner = new Scanner(System.in)) {
-            int coins = Currency.getMoney(); // starting money
-            System.out.println("welcome to erin's slot machine "); // greet
-            System.out.println("you start with " + coins + " dollars."); // show ur balance
+            int money = Currency.getMoney(); // starting money
+            System.out.println("You start with " + money + " dollars."); // show ur balance
             
-            while (coins > 0) { //makes sure they aint broke yns
-                System.out.println("\nyou have " + coins + " dollars."); //shows balance
-                System.out.print("how much do you want to gamble (1-3, or 0 to quit): "); //the prompt for player to gamble how much
+            while (money > 0) { //Makes sure they have enough money to bet, and starts the game
+                System.out.println("\nYou have " + money + " dollars."); //shows balance
+                System.out.println("                                                                      ");
+                System.out.print("How much do you want to bet (1 to " + money + ", or 0 to quit): "); //the prompt for player to gamble how much
                 int bet = scanner.nextInt();
                 
                 if (bet == 0) {
-                    System.out.println("thanks for your money fool, you finished with " + coins + " dollars."); // quit the game like a noob
+                    System.out.println("Thank you playing, you finished with " + money + " dollars."); // quit the game like a noob
                     break;
                 }
-                if (bet < 1 || bet > 3 || bet > coins) {
-                    System.out.println("bro dont fat finger"); // if they dont put the right digits, or they too broke to bet that amount, it restarts the sequence
+                if (bet < 1 || bet > 1000000 || bet > money) {
+                    System.out.println("Invalid input"); // if they dont put the right digits, or they too broke to bet that amount, it restarts the sequence
                     continue;
                 }
                 
-                coins -= bet;
+                money -= bet;
                 String[][] reels = spinReels(); // starts the game
                 
                 // display reels
@@ -41,17 +40,19 @@ public class Slots {
                 
                 // checks winnings
                 int winnings = calculateWinnings(reels, bet);
-                coins += winnings;
+                money += winnings;
+                Currency.setMoney(money);
                 
                 if (winnings > 0) {
-                    System.out.println("you won " + winnings + " coins"); // ya win
+                    System.out.println("You win " + winnings + " dollars"); // You win
                 } else {
-                    System.out.println("loss, 99% of gamblers quit before winning big"); // ya lost
+                    System.out.println("                                    ");
+                    System.out.println("You lose " + bet + " dollars"); // You lost
                 }
             }
             
-            if (coins <= 0) {
-                System.out.println("your broke, game over."); // literally game over, cuz they vroke
+            if (money <= 0  ) {
+                System.out.println("You are out of money, game over."); // Game over, because they are broke
             }
         } // starting money
     }
@@ -77,14 +78,21 @@ public class Slots {
                 String symbol = reels[row][0];
                 switch (symbol) {
                     case "7" -> payout += 300 * bet; // jackpot
-                    case "Pikachu" -> payout += 50 * bet; // second best outcome
-                    case "Rattata" -> payout += 20 * bet; // third best outcome
-                    case "Bellsprout" -> payout += 15 * bet; // fourth outcome
-                    case "Pokeball" -> payout += 10 * bet; // least money
+                    case "@" -> payout += 4 * bet; // second best outcome
+                    case "#" -> payout += 3 * bet; // third best outcome
+                    case "$" -> payout += 2 * bet; // fourth outcome
+                    case "%" -> payout += 1.5 * bet; // least money
+                    case "T" -> payout += 1.5 * bet; // fodders to stop players from winning too much money
+                    case "J" -> payout += 1.5 * bet; // fodder
+                    case "C" -> payout += 1.5 * bet; // fodder
+                    case "E" -> payout += 1.5 * bet; // fodder
+                    case "K" -> payout += 1.5 * bet; // fodder
+                    case "L" -> payout += 1.5 * bet; // fodder
                 }
             }
         }
 
         return payout;
+    
     }
 }
